@@ -1,7 +1,7 @@
 
 import { useEffect } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Environment, Float, Text3D, Center } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera, Environment, Float } from '@react-three/drei';
 import { GltfCharacter } from './GltfCharacter';
 
 function CameraController() {

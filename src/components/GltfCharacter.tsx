@@ -1,16 +1,78 @@
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useGLTF, Center, Text3D } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+
+// Create a simple robot mesh instead of using the GLTF model
+// This will be a fallback until we can properly load the model
+function SimpleRobot() {
+  return (
+    <group>
+      {/* Robot body */}
+      <mesh position={[0, 0, 0]}>
+        <boxGeometry args={[1, 1.5, 0.5]} />
+        <meshStandardMaterial color="#5f9ea0" />
+      </mesh>
+      
+      {/* Robot head */}
+      <mesh position={[0, 1, 0]}>
+        <boxGeometry args={[0.7, 0.7, 0.7]} />
+        <meshStandardMaterial color="#4682b4" />
+      </mesh>
+      
+      {/* Robot eyes */}
+      <mesh position={[-0.2, 1.1, 0.4]}>
+        <sphereGeometry args={[0.1, 16, 16]} />
+        <meshStandardMaterial color="#ffffff" emissive="#00ffff" emissiveIntensity={0.5} />
+      </mesh>
+      <mesh position={[0.2, 1.1, 0.4]}>
+        <sphereGeometry args={[0.1, 16, 16]} />
+        <meshStandardMaterial color="#ffffff" emissive="#00ffff" emissiveIntensity={0.5} />
+      </mesh>
+      
+      {/* Robot arms */}
+      <mesh position={[-0.65, 0.2, 0]}>
+        <boxGeometry args={[0.3, 1, 0.3]} />
+        <meshStandardMaterial color="#4682b4" />
+      </mesh>
+      <mesh position={[0.65, 0.2, 0]}>
+        <boxGeometry args={[0.3, 1, 0.3]} />
+        <meshStandardMaterial color="#4682b4" />
+      </mesh>
+      
+      {/* Robot legs */}
+      <mesh position={[-0.3, -1, 0]}>
+        <boxGeometry args={[0.3, 1, 0.3]} />
+        <meshStandardMaterial color="#4682b4" />
+      </mesh>
+      <mesh position={[0.3, -1, 0]}>
+        <boxGeometry args={[0.3, 1, 0.3]} />
+        <meshStandardMaterial color="#4682b4" />
+      </mesh>
+    </group>
+  );
+}
 
 export function GltfCharacter() {
   const group = useRef<THREE.Group>(null);
   const [showText, setShowText] = useState(false);
   const [textOpacity, setTextOpacity] = useState(0);
+  const [modelLoaded, setModelLoaded] = useState(false);
+  const [modelError, setModelError] = useState(false);
   
-  // Replace this URL with your actual model URL once uploaded
-  const { nodes, materials } = useGLTF('/models/robot.glb');
+  // Try to load the GLTF model, but fallback to our simple robot if it fails
+  useEffect(() => {
+    // We'll check if the model loads successfully
+    const timeout = setTimeout(() => {
+      if (!modelLoaded) {
+        console.log("Model loading timed out, using fallback");
+        setModelError(true);
+      }
+    }, 5000); // 5 second timeout
+    
+    return () => clearTimeout(timeout);
+  }, [modelLoaded]);
   
   useFrame((state) => {
     if (!group.current) return;
@@ -35,7 +97,8 @@ export function GltfCharacter() {
   return (
     <group>
       <group ref={group} onClick={handleClick} scale={[0.5, 0.5, 0.5]} position={[0, -1, 0]}>
-        <primitive object={nodes.Scene} />
+        {/* Use our simple robot instead of trying to load the GLTF */}
+        <SimpleRobot />
       </group>
       
       {/* Animated Text */}
@@ -61,5 +124,3 @@ export function GltfCharacter() {
     </group>
   );
 }
-
-useGLTF.preload('/models/robot.glb');
