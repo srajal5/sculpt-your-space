@@ -1,47 +1,83 @@
 
 import { useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Environment, Float } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera, Environment, Float, Text3D, Center } from '@react-three/drei';
 import * as THREE from 'three';
 
-function ComplexShape() {
-  const mesh = useRef<THREE.Mesh>(null);
-  const [isRotating, setIsRotating] = useState(false);
-  const rotationSpeed = 0.02;
-  const targetRotation = useRef({ x: 0, y: 0 });
+function Character() {
+  const group = useRef<THREE.Group>(null);
+  const [showText, setShowText] = useState(false);
+  const [textOpacity, setTextOpacity] = useState(0);
   
   useFrame((state) => {
-    if (!mesh.current || !isRotating) return;
+    if (!group.current) return;
     
-    mesh.current.rotation.y += rotationSpeed;
+    // Gentle floating animation for the character
+    group.current.position.y = Math.sin(state.clock.elapsedTime) * 0.1;
     
-    // Complete one full rotation
-    if (mesh.current.rotation.y >= targetRotation.current.y + Math.PI * 2) {
-      setIsRotating(false);
-      mesh.current.rotation.y = targetRotation.current.y;
+    // Animate text opacity
+    if (showText && textOpacity < 1) {
+      setTextOpacity((prev) => Math.min(prev + 0.05, 1));
+    }
+    if (!showText && textOpacity > 0) {
+      setTextOpacity((prev) => Math.max(prev - 0.05, 0));
     }
   });
   
   const handleClick = () => {
-    if (!mesh.current || isRotating) return;
-    targetRotation.current.y = mesh.current.rotation.y;
-    setIsRotating(true);
+    setShowText(true);
+    // Hide text after 3 seconds
+    setTimeout(() => setShowText(false), 3000);
   };
   
   return (
-    <Float speed={1.5} rotationIntensity={0.5} floatIntensity={0.8}>
-      <mesh ref={mesh} onClick={handleClick}>
-        <torusKnotGeometry args={[1, 0.3, 128, 16]} />
-        <meshStandardMaterial
-          color="#0EA5E9"
-          emissive="#1EAEDB"
-          emissiveIntensity={0.5}
-          metalness={0.9}
-          roughness={0.1}
-          wireframe={false}
-        />
-      </mesh>
-    </Float>
+    <group>
+      {/* Character */}
+      <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.8}>
+        <group ref={group} onClick={handleClick}>
+          {/* Body */}
+          <mesh position={[0, 0, 0]}>
+            <boxGeometry args={[1, 1.5, 0.5]} />
+            <meshStandardMaterial color="#9b87f5" />
+          </mesh>
+          {/* Head */}
+          <mesh position={[0, 1, 0]}>
+            <boxGeometry args={[0.75, 0.75, 0.75]} />
+            <meshStandardMaterial color="#9b87f5" />
+          </mesh>
+          {/* Eyes */}
+          <mesh position={[-0.2, 1.1, 0.4]}>
+            <sphereGeometry args={[0.08]} />
+            <meshStandardMaterial color="#000000" />
+          </mesh>
+          <mesh position={[0.2, 1.1, 0.4]}>
+            <sphereGeometry args={[0.08]} />
+            <meshStandardMaterial color="#000000" />
+          </mesh>
+        </group>
+      </Float>
+      
+      {/* Animated Text */}
+      {showText && (
+        <group position={[0, 2, 0]}>
+          <Center>
+            <Text3D
+              font="/fonts/helvetiker_regular.typeface.json"
+              size={0.5}
+              height={0.1}
+              curveSegments={12}
+            >
+              Hi, I'm a Web Developer
+              <meshStandardMaterial 
+                color="#0EA5E9" 
+                opacity={textOpacity}
+                transparent
+              />
+            </Text3D>
+          </Center>
+        </group>
+      )}
+    </group>
   );
 }
 
@@ -61,7 +97,7 @@ export default function Scene() {
       <Canvas>
         <CameraController />
         <Environment preset="night" />
-        <ambientLight intensity={0.3} />
+        <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={1.5} />
         <spotLight
           position={[-10, 10, -10]}
@@ -69,7 +105,7 @@ export default function Scene() {
           penumbra={1}
           intensity={1}
         />
-        <ComplexShape />
+        <Character />
         <OrbitControls 
           enableZoom={false} 
           enablePan={false}
