@@ -29,16 +29,16 @@ function ComplexShape() {
   };
   
   return (
-    <Float speed={1} rotationIntensity={0.2} floatIntensity={0.5}>
+    <Float speed={1.5} rotationIntensity={0.5} floatIntensity={0.8}>
       <mesh ref={mesh} onClick={handleClick}>
-        <dodecahedronGeometry args={[1.5, 1]} />
-        <meshStandardMaterial 
-          color="#9b87f5"
-          emissive="#6b46c1"
+        <torusKnotGeometry args={[1, 0.3, 128, 16]} />
+        <meshStandardMaterial
+          color="#0EA5E9"
+          emissive="#1EAEDB"
           emissiveIntensity={0.5}
-          metalness={0.8}
-          roughness={0.2}
-          wireframe={true}
+          metalness={0.9}
+          roughness={0.1}
+          wireframe={false}
         />
       </mesh>
     </Float>
@@ -60,9 +60,15 @@ export default function Scene() {
     <div className="canvas-container">
       <Canvas>
         <CameraController />
-        <Environment preset="city" />
-        <ambientLight intensity={0.2} />
+        <Environment preset="night" />
+        <ambientLight intensity={0.3} />
         <pointLight position={[10, 10, 10]} intensity={1.5} />
+        <spotLight
+          position={[-10, 10, -10]}
+          angle={0.15}
+          penumbra={1}
+          intensity={1}
+        />
         <ComplexShape />
         <OrbitControls 
           enableZoom={false} 
