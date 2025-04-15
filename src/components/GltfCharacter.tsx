@@ -1,6 +1,6 @@
 
 import { useRef, useState } from 'react';
-import { useGLTF } from '@react-three/drei';
+import { useGLTF, Center, Text3D } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
