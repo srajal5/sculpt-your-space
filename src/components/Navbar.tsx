@@ -7,13 +7,16 @@ const navLinks = [
   { title: 'Home', url: '#home' },
   { title: 'Projects', url: '#projects' },
   { title: 'About', url: '#about' },
+  { title: 'Skills', url: '#skills' },
   { title: 'Contact', url: '#contact' },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
   
+  // Handle scroll for navbar background
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
@@ -21,6 +24,17 @@ export default function Navbar() {
         setScrolled(true);
       } else {
         setScrolled(false);
+      }
+      
+      // Update active section based on scroll position
+      const sections = navLinks.map(link => link.title.toLowerCase());
+      
+      for (const section of sections.reverse()) { // Check from bottom to top
+        const element = document.getElementById(section);
+        if (element && window.scrollY >= element.offsetTop - 300) {
+          setActiveSection(section);
+          break;
+        }
       }
     };
     
@@ -42,16 +56,27 @@ export default function Navbar() {
         
         {/* Desktop Menu */}
         <nav className="hidden md:flex gap-6">
-          {navLinks.map((link) => (
-            <a
-              key={link.title}
-              href={link.url}
-              className="text-foreground hover:text-primary transition-colors relative group"
-            >
-              {link.title}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
-            </a>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.title.toLowerCase();
+            return (
+              <a
+                key={link.title}
+                href={link.url}
+                className={cn(
+                  "text-foreground hover:text-primary transition-colors relative group",
+                  isActive && "text-primary"
+                )}
+              >
+                {link.title}
+                <span 
+                  className={cn(
+                    "absolute bottom-0 left-0 h-0.5 bg-primary transition-all duration-300",
+                    isActive ? "w-full" : "w-0 group-hover:w-full"
+                  )} 
+                />
+              </a>
+            );
+          })}
         </nav>
         
         {/* Mobile Menu Button */}

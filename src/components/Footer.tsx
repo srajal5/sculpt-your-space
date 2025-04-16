@@ -1,5 +1,6 @@
 
 import { ChevronUp } from 'lucide-react';
+import { Github, Linkedin, Twitter, Instagram } from 'lucide-react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -27,6 +28,9 @@ export default function Footer() {
               <a href="#about" className="text-muted-foreground hover:text-foreground transition-colors">
                 About
               </a>
+              <a href="#skills" className="text-muted-foreground hover:text-foreground transition-colors">
+                Skills
+              </a>
               <a href="#contact" className="text-muted-foreground hover:text-foreground transition-colors">
                 Contact
               </a>
@@ -45,7 +49,23 @@ export default function Footer() {
           <p className="text-muted-foreground text-sm">
             © {currentYear} 3D Portfolio. All rights reserved.
           </p>
-          <p className="text-muted-foreground text-sm mt-2 md:mt-0">
+          
+          <div className="flex space-x-4 mt-4 md:mt-0">
+            <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <Github size={18} />
+            </a>
+            <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <Linkedin size={18} />
+            </a>
+            <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <Twitter size={18} />
+            </a>
+            <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <Instagram size={18} />
+            </a>
+          </div>
+          
+          <p className="text-muted-foreground text-sm mt-4 md:mt-0">
             Built with React, Three.js and Tailwind CSS
           </p>
         </div>

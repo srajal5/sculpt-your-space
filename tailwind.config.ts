@@ -100,5 +100,30 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		function({ addComponents, addUtilities }) {
+			// Custom components
+			addComponents({
+				'.glassmorphism': {
+					'@apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.3)]': {}
+				},
+				'.skill-progress': {
+					'position': 'relative',
+					'&::before': {
+						content: '""',
+						'position': 'absolute',
+						'top': '0',
+						'left': '0',
+						'height': '100%',
+						'width': '0%',
+						'transition': 'width var(--animation-duration, 1s) ease-in-out'
+					},
+					'&.animate-skill::before': {
+						'width': 'var(--value, 0%)' 
+					}
+				}
+			});
+		}
+	],
 } satisfies Config;
