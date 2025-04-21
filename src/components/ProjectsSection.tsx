@@ -1,24 +1,25 @@
 import ProjectCard from './ProjectCard';
-import macbookImage from '../Imagecomponents/Screenshot 2025-04-17 090906.png';
+import ecom from '../Imagecomponents/Screenshot 2025-04-17 090906.png';
+import shareable from '../Imagecomponents/image.png';
 
 const projects = [
   {
     id: 1,
     title: 'E-commerce Website',
     description: 'Interactive E-commerce website with a modern and responsive design. It includes features like product listings, shopping cart, and checkout process.',
-    image: macbookImage,
+    image: ecom,
     technologies: ['JavaScript', 'React', 'Next.js', 'Tailwind CSS'],
     demoUrl: 'https://e-commerce1-silk-one.vercel.app/',
     codeUrl: 'https://github.com/srajal5/QuickCart',
   },
   {
     id: 2,
-    title: 'Interactive Data Visualization',
-    description: 'Dynamic 3D data visualization dashboard using WebGL and GLSL shaders',
-    image: '',
-    technologies: ['WebGL', 'D3.js', 'GLSL'],
-    demoUrl: '#',
-    codeUrl: '#',
+    title: 'File sharing website',
+    description: 'A file sharing website that allows users to share files with others. It includes features like file upload, download, and sharing.',
+    image: shareable,
+    technologies: ['JavaScript', 'React', 'Next.js', 'Tailwind CSS'],
+    demoUrl: 'https://filesharing-a6llxgsqu-srajal5s-projects.vercel.app/',
+    codeUrl: 'https://github.com/srajal5/shareable-filehub',
   },
   {
     id: 3,
