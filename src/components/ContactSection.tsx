@@ -62,7 +62,7 @@ export default function ContactSection() {
                   </div>
                   <div>
                     <h3 className="font-medium">Email</h3>
-                    <p className="text-muted-foreground">hello@example.com</p>
+                    <p className="text-muted-foreground">Srajalpuri55@gmail.com</p>
                   </div>
                 </div>
               </Card>
@@ -74,7 +74,7 @@ export default function ContactSection() {
                   </div>
                   <div>
                     <h3 className="font-medium">Location</h3>
-                    <p className="text-muted-foreground">San Francisco, CA</p>
+                    <p className="text-muted-foreground">Lucknow, Uttar pradesh, India</p>
                   </div>
                 </div>
               </Card>

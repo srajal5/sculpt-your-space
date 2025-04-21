@@ -31,15 +31,20 @@ export default function HeroSection() {
   return (
     <section id="home" className="section relative pt-20">
       <div ref={containerRef} className="container mx-auto px-4 h-full flex flex-col justify-center items-center text-center">
-        <p className="text-xl md:text-2xl mb-4 text-muted-foreground opacity-0 fade-in">Welcome to my</p>
+       
         <h1 
           ref={textRef} 
           className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 opacity-0 fade-in delay-100"
         >
           <span className="text-gradient">Portfolio</span>
         </h1>
+
+        <p className="text-xl md:text-2xl mb-4 text-muted-foreground opacity-0 fade-in">Hey, I'm Srajal</p>
+
         <p className="text-xl md:text-2xl max-w-2xl mx-auto mb-10 text-muted-foreground opacity-0 fade-in delay-200">
-          Creative developer specializing in interactive experiences and 3D web applications
+          Full stack developer || Web designer 
+           
+          
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 opacity-0 fade-in delay-300">

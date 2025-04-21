@@ -1,8 +1,7 @@
-
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Code, Monitor, Palette, Brain, Terminal, Server, Globe, Layout } from 'lucide-react';
+import { Palette, Terminal, Server, Layout } from 'lucide-react';
 
 interface Skill {
   name: string;
@@ -12,8 +11,7 @@ interface Skill {
 
 export default function SkillsSection() {
   const skillsRef = useRef<HTMLDivElement>(null);
-  
-  // Define skills with their proficiency level (0-100)
+
   const skills: Skill[] = [
     { name: 'React', level: 90, category: 'frontend' },
     { name: 'JavaScript', level: 85, category: 'frontend' },
@@ -32,48 +30,65 @@ export default function SkillsSection() {
     { name: 'Git', level: 85, category: 'tools' },
     { name: 'Docker', level: 65, category: 'tools' },
   ];
-  
+
   const categories = [
     { id: 'frontend', name: 'Frontend', icon: <Layout className="w-6 h-6 text-neon-purple" /> },
     { id: 'backend', name: 'Backend', icon: <Server className="w-6 h-6 text-neon-blue" /> },
     { id: 'design', name: 'Design', icon: <Palette className="w-6 h-6 text-neon-pink" /> },
     { id: 'tools', name: 'Tools', icon: <Terminal className="w-6 h-6 text-primary" /> },
   ];
-  
+
+  // Track bar fill state for animation per-skill
+  const [animatedValues, setAnimatedValues] = useState<Record<string, number>>({});
+
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    let timeoutIds: NodeJS.Timeout[] = [];
+    let observer: IntersectionObserver | null = null;
+
+    function animateBars() {
+      // Only run once if already animated
+      if (Object.keys(animatedValues).length > 0) return;
+
+      skills.forEach((skill, i) => {
+        // Stagger each progress bar
+        const tid = setTimeout(() => {
+          setAnimatedValues((prev) => ({
+            ...prev,
+            [skill.name]: skill.level,
+          }));
+        }, i * 120);
+        timeoutIds.push(tid);
+      });
+    }
+
+    observer = new window.IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // Add animation class to each skill bar when visible
-            const skillBars = document.querySelectorAll('.skill-progress');
-            skillBars.forEach((bar, index) => {
-              setTimeout(() => {
-                bar.classList.add('animate-skill');
-              }, index * 100);
-            });
+            animateBars();
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.15 }
     );
-    
+
     if (skillsRef.current) {
       observer.observe(skillsRef.current);
     }
-    
     return () => {
-      if (skillsRef.current) {
+      timeoutIds.forEach(clearTimeout);
+      if (skillsRef.current && observer) {
         observer.unobserve(skillsRef.current);
       }
     };
+    // eslint-disable-next-line
   }, []);
-  
+
   return (
-    <section id="skills" className="section py-20">
+    <section id="skills" className="section py-20 bg-black">
       <div className="container mx-auto px-4">
         <h2 className="section-heading text-center mb-12">Skills</h2>
-        
+
         <div ref={skillsRef} className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {categories.map((category) => (
             <Card key={category.id} className="p-6 glassmorphism border-white/5">
@@ -81,7 +96,7 @@ export default function SkillsSection() {
                 {category.icon}
                 <h3 className="text-xl font-semibold">{category.name}</h3>
               </div>
-              
+
               <div className="space-y-4">
                 {skills
                   .filter(skill => skill.category === category.id)
@@ -91,14 +106,23 @@ export default function SkillsSection() {
                         <span className="text-sm font-medium">{skill.name}</span>
                         <span className="text-xs text-muted-foreground">{skill.level}%</span>
                       </div>
-                      <Progress 
-                        value={0} // Start at 0 for animation
+                      <Progress
+                        value={animatedValues[skill.name] || 0}
                         max={100}
-                        className="h-2 skill-progress before:bg-gradient-to-r before:from-neon-purple before:to-neon-blue relative overflow-hidden"
+                        className={`
+                          h-2 
+                          transition-all 
+                          duration-1000
+                          rounded-full 
+                          shadow-inner
+                          bg-secondary/40 
+                          overflow-hidden 
+                          border border-white/10
+                        `}
                         style={{
-                          '--value': skill.level,
-                          '--animation-duration': '1.5s',
-                        } as any}
+                          background:
+                            'linear-gradient(90deg, #9b87f5 0%, #8B5CF6 60%, #6E59A5 100%)',
+                        }}
                       />
                     </div>
                   ))}
