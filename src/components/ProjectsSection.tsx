@@ -1,22 +1,21 @@
-
 import ProjectCard from './ProjectCard';
+import macbookImage from '../Imagecomponents/Screenshot 2025-04-17 090906.png';
 
-// Sample project data - in a real application, you might fetch this from an API
 const projects = [
   {
     id: 1,
-    title: '3D Product Configurator',
-    description: 'Interactive 3D product customization tool built with Three.js and React',
-    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=200',
-    technologies: ['Three.js', 'React', 'WebGL'],
-    demoUrl: '#',
-    codeUrl: '#',
+    title: 'E-commerce Website',
+    description: 'Interactive E-commerce website with a modern and responsive design. It includes features like product listings, shopping cart, and checkout process.',
+    image: macbookImage,
+    technologies: ['JavaScript', 'React', 'Next.js', 'Tailwind CSS'],
+    demoUrl: 'https://e-commerce1-silk-one.vercel.app/',
+    codeUrl: 'https://github.com/srajal5/QuickCart',
   },
   {
     id: 2,
     title: 'Interactive Data Visualization',
     description: 'Dynamic 3D data visualization dashboard using WebGL and GLSL shaders',
-    image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&q=80&w=200',
+    image: '',
     technologies: ['WebGL', 'D3.js', 'GLSL'],
     demoUrl: '#',
     codeUrl: '#',

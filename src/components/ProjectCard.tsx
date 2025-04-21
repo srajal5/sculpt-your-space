@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -24,6 +23,7 @@ export default function ProjectCard({
   codeUrl
 }: ProjectCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [imageError, setImageError] = useState(false);
   
   return (
     <Card 
@@ -35,10 +35,16 @@ export default function ProjectCard({
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="h-48 overflow-hidden relative">
-        <div 
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-          style={{ backgroundImage: `url(${image})` }}
-        />
+        {!imageError ? (
+          <img 
+            src={image}
+            alt={title}
+            className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20" />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
       </div>
       

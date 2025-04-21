@@ -28,7 +28,7 @@ export default function LoadingScreen() {
         isComplete ? "opacity-0 pointer-events-none" : "opacity-100"
       )}
     >
-      <h2 className="text-gradient text-4xl font-bold mb-8">3D Portfolio</h2>
+      <h2 className="text-gradient text-4xl font-bold mb-8">Portfolio</h2>
       <div className="w-64 h-2 bg-secondary rounded-full overflow-hidden">
         <div 
           className="h-full bg-gradient-to-r from-neon-purple to-neon-blue transition-all duration-300" 

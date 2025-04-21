@@ -36,7 +36,7 @@ export default function HeroSection() {
           ref={textRef} 
           className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 opacity-0 fade-in delay-100"
         >
-          <span className="text-gradient">3D Portfolio</span>
+          <span className="text-gradient">Portfolio</span>
         </h1>
         <p className="text-xl md:text-2xl max-w-2xl mx-auto mb-10 text-muted-foreground opacity-0 fade-in delay-200">
           Creative developer specializing in interactive experiences and 3D web applications
