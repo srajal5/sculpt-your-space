@@ -4,9 +4,17 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Mail, MapPin, Send } from 'lucide-react';
+import { Mail, MapPin, Send, Eye, X } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import emailjs from '@emailjs/browser';
+
+interface Message {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  timestamp: string;
+}
 
 export default function ContactSection() {
   const { toast } = useToast();
@@ -16,22 +24,12 @@ export default function ContactSection() {
     subject: '',
     message: '',
   });
-  const [emailjsConfig, setEmailjsConfig] = useState({
-    serviceId: localStorage.getItem('emailjs_service_id') || '',
-    templateId: localStorage.getItem('emailjs_template_id') || '',
-    publicKey: localStorage.getItem('emailjs_public_key') || '',
-  });
-  const [showConfig, setShowConfig] = useState(false);
   const [loading, setLoading] = useState(false);
-  
-  const handleConfigChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setEmailjsConfig((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    localStorage.setItem(`emailjs_${name}`, value);
-  };
+  const [showMessages, setShowMessages] = useState(false);
+  const [messages, setMessages] = useState<Message[]>(() => {
+    const saved = localStorage.getItem('contact_messages');
+    return saved ? JSON.parse(saved) : [];
+  });
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -40,59 +38,63 @@ export default function ContactSection() {
       [name]: value,
     }));
   };
+
+  const saveMessage = (messageData: Omit<Message, 'id' | 'timestamp'>) => {
+    const newMessage: Message = {
+      ...messageData,
+      id: Date.now().toString(),
+      timestamp: new Date().toISOString(),
+    };
+    
+    const updatedMessages = [newMessage, ...messages];
+    setMessages(updatedMessages);
+    localStorage.setItem('contact_messages', JSON.stringify(updatedMessages));
+    return newMessage;
+  };
+
+  const createMailtoLink = (data: typeof formData) => {
+    const subject = encodeURIComponent(`Contact Form: ${data.subject}`);
+    const body = encodeURIComponent(
+      `Name: ${data.name}\nEmail: ${data.email}\n\nMessage:\n${data.message}`
+    );
+    return `mailto:Srajalpuri55@gmail.com?subject=${subject}&body=${body}`;
+  };
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!emailjsConfig.serviceId || !emailjsConfig.templateId || !emailjsConfig.publicKey) {
-      toast({
-        title: "EmailJS Configuration Required",
-        description: "Please configure your EmailJS credentials first.",
-        variant: "destructive",
-      });
-      setShowConfig(true);
-      return;
-    }
-    
     setLoading(true);
     
     try {
-      const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        subject: formData.subject,
-        message: formData.message,
-        to_email: 'Srajalpuri55@gmail.com',
-      };
+      // Save message locally
+      const savedMessage = saveMessage(formData);
       
-      await emailjs.send(emailjsConfig.serviceId, emailjsConfig.templateId, templateParams, emailjsConfig.publicKey);
+      // Create mailto link and try to open it
+      const mailtoLink = createMailtoLink(formData);
+      
+      // Small delay to show loading state
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Try to open email client
+      window.location.href = mailtoLink;
       
       toast({
-        title: "Message sent!",
-        description: "Thanks for reaching out. I'll get back to you soon.",
+        title: "Message saved!",
+        description: "Opening your email client... Message also saved locally.",
       });
       
+      // Reset form
       setFormData({
         name: '',
         email: '',
         subject: '',
         message: '',
       });
-    } catch (error: any) {
-      console.error('EmailJS error:', error);
       
-      let errorMessage = "Please try again later.";
-      if (error?.text?.includes("Public Key is invalid") || error?.status === 400) {
-        errorMessage = "Invalid EmailJS credentials. Please check your Service ID, Template ID, and Public Key.";
-        setShowConfig(true);
-      } else if (error?.text) {
-        errorMessage = error.text;
-      }
-      
+    } catch (error) {
+      console.error('Error sending message:', error);
       toast({
-        title: "Failed to send message",
-        description: errorMessage,
-        variant: "destructive",
+        title: "Message saved",
+        description: "Couldn't open email client, but your message is saved locally.",
       });
     } finally {
       setLoading(false);
@@ -149,41 +151,38 @@ export default function ContactSection() {
           </div>
           
           <div className="lg:col-span-2">
-            {showConfig && (
+            {showMessages && (
               <Card className="p-6 glassmorphism border-white/5 mb-6">
-                <h3 className="font-medium mb-4">EmailJS Configuration</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Get your credentials from <a href="https://dashboard.emailjs.com" target="_blank" rel="noopener noreferrer" className="text-primary underline">EmailJS Dashboard</a>
-                </p>
-                <div className="space-y-4">
-                  <Input
-                    name="serviceId"
-                    placeholder="Service ID"
-                    value={emailjsConfig.serviceId}
-                    onChange={handleConfigChange}
-                    className="bg-secondary/20 border-white/5"
-                  />
-                  <Input
-                    name="templateId"
-                    placeholder="Template ID"
-                    value={emailjsConfig.templateId}
-                    onChange={handleConfigChange}
-                    className="bg-secondary/20 border-white/5"
-                  />
-                  <Input
-                    name="publicKey"
-                    placeholder="Public Key"
-                    value={emailjsConfig.publicKey}
-                    onChange={handleConfigChange}
-                    className="bg-secondary/20 border-white/5"
-                  />
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-medium">Saved Messages ({messages.length})</h3>
                   <Button 
-                    onClick={() => setShowConfig(false)}
-                    className="bg-gradient-to-r from-neon-purple to-neon-blue text-white border-0"
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => setShowMessages(false)}
                   >
-                    Save Configuration
+                    <X className="w-4 h-4" />
                   </Button>
                 </div>
+                {messages.length === 0 ? (
+                  <p className="text-muted-foreground text-center py-4">No messages yet</p>
+                ) : (
+                  <div className="space-y-3 max-h-64 overflow-y-auto">
+                    {messages.map((msg) => (
+                      <div key={msg.id} className="p-3 bg-secondary/20 rounded-lg border border-white/5">
+                        <div className="flex justify-between items-start mb-2">
+                          <div className="text-sm font-medium">{msg.subject}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {new Date(msg.timestamp).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <div className="text-sm text-muted-foreground mb-1">
+                          From: {msg.name} ({msg.email})
+                        </div>
+                        <div className="text-sm">{msg.message}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </Card>
             )}
             
@@ -193,10 +192,11 @@ export default function ContactSection() {
                 <Button 
                   variant="outline"
                   size="sm"
-                  onClick={() => setShowConfig(!showConfig)}
-                  className="text-xs"
+                  onClick={() => setShowMessages(!showMessages)}
+                  className="text-xs flex items-center gap-2"
                 >
-                  {showConfig ? 'Hide' : 'Setup'} EmailJS
+                  <Eye className="w-3 h-3" />
+                  {showMessages ? 'Hide' : 'View'} Messages
                 </Button>
               </div>
               <form onSubmit={handleSubmit} className="space-y-5">
