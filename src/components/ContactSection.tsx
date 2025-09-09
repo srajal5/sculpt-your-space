@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Mail, MapPin, Send } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import emailjs from '@emailjs/browser';
 
 export default function ContactSection() {
   const { toast } = useToast();
@@ -25,12 +26,26 @@ export default function ContactSection() {
     }));
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      // Replace these with your EmailJS credentials
+      const serviceId = 'your_service_id';
+      const templateId = 'your_template_id';
+      const publicKey = 'your_public_key';
+      
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        to_email: 'Srajalpuri55@gmail.com',
+      };
+      
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      
       toast({
         title: "Message sent!",
         description: "Thanks for reaching out. I'll get back to you soon.",
@@ -42,9 +57,16 @@ export default function ContactSection() {
         subject: '',
         message: '',
       });
-      
+    } catch (error) {
+      console.error('EmailJS error:', error);
+      toast({
+        title: "Failed to send message",
+        description: "Please try again or contact me directly via email.",
+        variant: "destructive",
+      });
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
   
   return (
