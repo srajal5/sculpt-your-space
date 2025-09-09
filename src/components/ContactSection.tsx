@@ -78,11 +78,20 @@ export default function ContactSection() {
         subject: '',
         message: '',
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('EmailJS error:', error);
+      
+      let errorMessage = "Please try again later.";
+      if (error?.text?.includes("Public Key is invalid") || error?.status === 400) {
+        errorMessage = "Invalid EmailJS credentials. Please check your Service ID, Template ID, and Public Key.";
+        setShowConfig(true);
+      } else if (error?.text) {
+        errorMessage = error.text;
+      }
+      
       toast({
         title: "Failed to send message",
-        description: "Please check your EmailJS configuration or try again later.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
