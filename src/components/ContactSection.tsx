@@ -16,7 +16,22 @@ export default function ContactSection() {
     subject: '',
     message: '',
   });
+  const [emailjsConfig, setEmailjsConfig] = useState({
+    serviceId: localStorage.getItem('emailjs_service_id') || '',
+    templateId: localStorage.getItem('emailjs_template_id') || '',
+    publicKey: localStorage.getItem('emailjs_public_key') || '',
+  });
+  const [showConfig, setShowConfig] = useState(false);
   const [loading, setLoading] = useState(false);
+  
+  const handleConfigChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setEmailjsConfig((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    localStorage.setItem(`emailjs_${name}`, value);
+  };
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -28,14 +43,20 @@ export default function ContactSection() {
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!emailjsConfig.serviceId || !emailjsConfig.templateId || !emailjsConfig.publicKey) {
+      toast({
+        title: "EmailJS Configuration Required",
+        description: "Please configure your EmailJS credentials first.",
+        variant: "destructive",
+      });
+      setShowConfig(true);
+      return;
+    }
+    
     setLoading(true);
     
     try {
-      // Replace these with your EmailJS credentials
-      const serviceId = 'your_service_id';
-      const templateId = 'your_template_id';
-      const publicKey = 'your_public_key';
-      
       const templateParams = {
         from_name: formData.name,
         from_email: formData.email,
@@ -44,7 +65,7 @@ export default function ContactSection() {
         to_email: 'Srajalpuri55@gmail.com',
       };
       
-      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      await emailjs.send(emailjsConfig.serviceId, emailjsConfig.templateId, templateParams, emailjsConfig.publicKey);
       
       toast({
         title: "Message sent!",
@@ -61,7 +82,7 @@ export default function ContactSection() {
       console.error('EmailJS error:', error);
       toast({
         title: "Failed to send message",
-        description: "Please try again or contact me directly via email.",
+        description: "Please check your EmailJS configuration or try again later.",
         variant: "destructive",
       });
     } finally {
@@ -119,7 +140,56 @@ export default function ContactSection() {
           </div>
           
           <div className="lg:col-span-2">
+            {showConfig && (
+              <Card className="p-6 glassmorphism border-white/5 mb-6">
+                <h3 className="font-medium mb-4">EmailJS Configuration</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Get your credentials from <a href="https://dashboard.emailjs.com" target="_blank" rel="noopener noreferrer" className="text-primary underline">EmailJS Dashboard</a>
+                </p>
+                <div className="space-y-4">
+                  <Input
+                    name="serviceId"
+                    placeholder="Service ID"
+                    value={emailjsConfig.serviceId}
+                    onChange={handleConfigChange}
+                    className="bg-secondary/20 border-white/5"
+                  />
+                  <Input
+                    name="templateId"
+                    placeholder="Template ID"
+                    value={emailjsConfig.templateId}
+                    onChange={handleConfigChange}
+                    className="bg-secondary/20 border-white/5"
+                  />
+                  <Input
+                    name="publicKey"
+                    placeholder="Public Key"
+                    value={emailjsConfig.publicKey}
+                    onChange={handleConfigChange}
+                    className="bg-secondary/20 border-white/5"
+                  />
+                  <Button 
+                    onClick={() => setShowConfig(false)}
+                    className="bg-gradient-to-r from-neon-purple to-neon-blue text-white border-0"
+                  >
+                    Save Configuration
+                  </Button>
+                </div>
+              </Card>
+            )}
+            
             <Card className="p-6 glassmorphism border-white/5">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="font-medium">Send Message</h3>
+                <Button 
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowConfig(!showConfig)}
+                  className="text-xs"
+                >
+                  {showConfig ? 'Hide' : 'Setup'} EmailJS
+                </Button>
+              </div>
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
