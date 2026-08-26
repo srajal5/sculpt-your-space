@@ -1,207 +1,127 @@
-import { useRef, useEffect, useState, useMemo } from 'react';
+import { useRef, useEffect, Suspense } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Environment, Float } from '@react-three/drei';
 import * as THREE from 'three';
+import NebulaParticles from './3d/NebulaParticles';
+import FloatingCrystals from './3d/FloatingCrystals';
+import AuroraWaves from './3d/AuroraWaves';
+import WireframeGrid from './3d/WireframeGrid';
+import HeroCenterpiece from './3d/HeroCenterpiece';
+import LightTrails from './3d/LightTrails';
 
-// Floating particles component
-function ParticleField() {
-  const particles = useRef<THREE.Points>(null);
-  const count = 200;
-  
-  const particlePositions = useMemo(() => {
-    const positions = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 15;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 15;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 15;
-    }
-    return positions;
-  }, [count]);
-  
-  useFrame((state) => {
-    if (!particles.current) return;
-    particles.current.rotation.y = state.clock.getElapsedTime() * 0.05;
-  });
-  
-  return (
-    <points ref={particles}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[particlePositions, 3]}
-        />
-      </bufferGeometry>
-      <pointsMaterial 
-        args={[{
-          size: 0.1,
-          color: '#9b87f5',
-          transparent: true,
-          opacity: 0.8,
-          sizeAttenuation: true
-        }]}
-      />
-    </points>
-  );
-}
+/**
+ * SmoothCameraController — Follows the mouse with gentle parallax
+ * and subtle breathing motion. Does NOT use OrbitControls so it
+ * won't interfere with page scrolling.
+ */
+function SmoothCameraController() {
+  const { camera } = useThree();
+  const mouse = useRef({ x: 0, y: 0 });
+  const target = useRef(new THREE.Vector3(0, 0, 7));
 
-// Interactive geometric shapes
-function GeometricShapes() {
-  const shapes = useRef<THREE.Group>(null);
-  const shapesCount = 15;
-  const [shapesData] = useState(() => 
-    Array.from({ length: shapesCount }, () => ({
-      position: [
-        (Math.random() - 0.5) * 10,
-        (Math.random() - 0.5) * 10,
-        (Math.random() - 0.5) * 10
-      ],
-      rotation: [
-        Math.random() * Math.PI,
-        Math.random() * Math.PI,
-        Math.random() * Math.PI
-      ],
-      scale: Math.random() * 0.5 + 0.1,
-      speed: Math.random() * 0.002 + 0.001,
-      geometryType: Math.floor(Math.random() * 5)
-    }))
-  );
-  
-  useFrame(() => {
-    if (!shapes.current) return;
-    
-    shapes.current.children.forEach((shape, i) => {
-      const data = shapesData[i];
-      shape.rotation.x += data.speed;
-      shape.rotation.y += data.speed * 1.5;
-    });
-  });
-  
-  return (
-    <group ref={shapes}>
-      {shapesData.map((data, index) => {
-        let geometry;
-        switch(data.geometryType) {
-          case 0:
-            geometry = <octahedronGeometry args={[data.scale, 0]} />;
-            break;
-          case 1:
-            geometry = <tetrahedronGeometry args={[data.scale, 0]} />;
-            break;
-          case 2:
-            geometry = <dodecahedronGeometry args={[data.scale, 0]} />;
-            break;
-          case 3:
-            geometry = <icosahedronGeometry args={[data.scale, 0]} />;
-            break;
-          default:
-            geometry = <boxGeometry args={[data.scale, data.scale, data.scale]} />;
-        }
-        
-        return (
-          <mesh
-            key={index}
-            position={data.position as [number, number, number]}
-            rotation={data.rotation as [number, number, number]}
-          >
-            {geometry}
-            <meshStandardMaterial
-              args={[{
-                color: index % 2 === 0 ? '#9b87f5' : '#0EA5E9',
-                wireframe: index % 3 === 0,
-                transparent: true,
-                opacity: 0.7,
-                metalness: 0.5,
-                roughness: 0.2
-              }]}
-            />
-          </mesh>
-        );
-      })}
-    </group>
-  );
-}
-
-function ComplexShape() {
-  const mesh = useRef<THREE.Mesh>(null);
-  const [isRotating, setIsRotating] = useState(false);
-  const rotationSpeed = 0.02;
-  const targetRotation = useRef({ x: 0, y: 0 });
-  
-  useFrame(() => {
-    if (!mesh.current || !isRotating) return;
-    
-    mesh.current.rotation.y += rotationSpeed;
-    
-    if (mesh.current.rotation.y >= targetRotation.current.y + Math.PI * 2) {
-      setIsRotating(false);
-      mesh.current.rotation.y = targetRotation.current.y;
-    }
-  });
-  
-  const handleClick = () => {
-    if (!mesh.current || isRotating) return;
-    targetRotation.current.y = mesh.current.rotation.y;
-    setIsRotating(true);
-  };
-  
-  return (
-    <Float speed={1} rotationIntensity={0.2} floatIntensity={0.5}>
-      <mesh ref={mesh} onClick={handleClick}>
-        <dodecahedronGeometry args={[1.5, 1]} />
-        <meshStandardMaterial 
-          args={[{
-            color: '#9b87f5',
-            emissive: '#6b46c1',
-            emissiveIntensity: 0.5,
-            metalness: 0.8,
-            roughness: 0.2,
-            wireframe: true
-          }]}
-        />
-      </mesh>
-    </Float>
-  );
-}
-
-function CameraController() {
-  const { camera, mouse } = useThree();
-  const targetPosition = useRef(new THREE.Vector3(0, 0, 5));
-  
   useEffect(() => {
-    camera.position.set(0, 0, 5);
+    camera.position.set(0, 0, 7);
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [camera]);
-  
-  useFrame(() => {
-    targetPosition.current.x = (mouse.x * 2);
-    targetPosition.current.y = (mouse.y * 2);
-    
-    camera.position.x += (targetPosition.current.x - camera.position.x) * 0.05;
-    camera.position.y += (targetPosition.current.y - camera.position.y) * 0.05;
-    
+
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime();
+
+    // Target position based on mouse + gentle breathing
+    target.current.x = mouse.current.x * 1.5;
+    target.current.y = mouse.current.y * 1.0 + Math.sin(t * 0.3) * 0.15;
+    target.current.z = 7 + Math.sin(t * 0.2) * 0.3;
+
+    // Smooth interpolation
+    camera.position.x += (target.current.x - camera.position.x) * 0.03;
+    camera.position.y += (target.current.y - camera.position.y) * 0.03;
+    camera.position.z += (target.current.z - camera.position.z) * 0.03;
+
     camera.lookAt(0, 0, 0);
   });
-  
+
   return null;
+}
+
+/**
+ * SceneLighting — Multi-point lighting setup with animated
+ * color-shifting point lights for dynamic atmosphere.
+ */
+function SceneLighting() {
+  const light1Ref = useRef<THREE.PointLight>(null);
+  const light2Ref = useRef<THREE.PointLight>(null);
+  const light3Ref = useRef<THREE.PointLight>(null);
+
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime();
+
+    if (light1Ref.current) {
+      light1Ref.current.position.x = Math.sin(t * 0.3) * 8;
+      light1Ref.current.position.y = Math.cos(t * 0.2) * 5;
+      light1Ref.current.intensity = 1.5 + Math.sin(t * 0.5) * 0.5;
+    }
+    if (light2Ref.current) {
+      light2Ref.current.position.x = Math.cos(t * 0.4) * 6;
+      light2Ref.current.position.z = Math.sin(t * 0.3) * 4;
+      light2Ref.current.intensity = 1.2 + Math.sin(t * 0.7 + 1) * 0.4;
+    }
+    if (light3Ref.current) {
+      light3Ref.current.position.y = Math.sin(t * 0.25) * 4;
+      light3Ref.current.intensity = 0.8 + Math.sin(t * 0.6 + 2) * 0.3;
+    }
+  });
+
+  return (
+    <>
+      <ambientLight intensity={0.08} color="#1a1030" />
+      <pointLight ref={light1Ref} position={[8, 5, 5]} intensity={1.5} color="#9b87f5" distance={25} decay={2} />
+      <pointLight ref={light2Ref} position={[-6, 3, -5]} intensity={1.2} color="#0EA5E9" distance={20} decay={2} />
+      <pointLight ref={light3Ref} position={[0, -5, 3]} intensity={0.8} color="#D946EF" distance={18} decay={2} />
+      <directionalLight position={[0, 10, 5]} intensity={0.15} color="#c4b5fd" />
+    </>
+  );
 }
 
 export default function Scene() {
   return (
     <div className="canvas-container">
-      <Canvas>
-        <CameraController />
-        <Environment preset="city" />
-        <ambientLight intensity={0.2} />
-        <pointLight position={[10, 10, 10]} intensity={1.5} />
-        <ComplexShape />
-        <ParticleField />
-        <GeometricShapes />
-        <OrbitControls 
-          enableZoom={false} 
-          enablePan={false}
-          enableRotate={true}
-          maxPolarAngle={Math.PI / 1.5}
-          minPolarAngle={Math.PI / 3}
-        />
+      <Canvas
+        gl={{
+          antialias: true,
+          alpha: false,
+          powerPreference: 'high-performance',
+        }}
+        camera={{ fov: 60, near: 0.1, far: 100, position: [0, 0, 7] }}
+        dpr={[1, 1.5]}
+        onCreated={({ gl }) => {
+          gl.toneMapping = THREE.ACESFilmicToneMapping;
+          gl.toneMappingExposure = 1.2;
+        }}
+      >
+        <Suspense fallback={null}>
+          {/* Camera & Lighting */}
+          <SmoothCameraController />
+          <SceneLighting />
+          <fog attach="fog" args={['#06050a', 8, 35]} />
+
+          {/* Background atmosphere layers */}
+          <NebulaParticles />
+          <AuroraWaves />
+
+          {/* Custom 3D models */}
+          <HeroCenterpiece />
+          <FloatingCrystals />
+
+          {/* Dynamic effects */}
+          <LightTrails />
+          <WireframeGrid />
+        </Suspense>
       </Canvas>
     </div>
   );

@@ -1,11 +1,14 @@
-
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Mail, MapPin, Send, Eye, X } from 'lucide-react';
+import MagneticButton from '@/components/animation/MagneticButton';
+import { TextReveal, Reveal } from '@/components/animation/TextReveal';
+import { Mail, MapPin, Send, Eye, X, CheckCircle2, Sparkles, Github, Linkedin, Twitter } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import emailjs from '@emailjs/browser';
 
 interface Message {
   id: string;
@@ -25,12 +28,13 @@ export default function ContactSection() {
     message: '',
   });
   const [loading, setLoading] = useState(false);
+  const [submittedSuccess, setSubmittedSuccess] = useState(false);
   const [showMessages, setShowMessages] = useState(false);
   const [messages, setMessages] = useState<Message[]>(() => {
     const saved = localStorage.getItem('contact_messages');
     return saved ? JSON.parse(saved) : [];
   });
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -45,7 +49,7 @@ export default function ContactSection() {
       id: Date.now().toString(),
       timestamp: new Date().toISOString(),
     };
-    
+
     const updatedMessages = [newMessage, ...messages];
     setMessages(updatedMessages);
     localStorage.setItem('contact_messages', JSON.stringify(updatedMessages));
@@ -59,205 +63,326 @@ export default function ContactSection() {
     );
     return `mailto:Srajalpuri55@gmail.com?subject=${subject}&body=${body}`;
   };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
+    // Save message locally first so no data is lost
+    saveMessage(formData);
+
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || '';
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '';
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '';
+
+    // Graceful fallback if EmailJS variables are unconfigured
+    const isUnconfigured = !serviceId || serviceId.includes('your_') ||
+      !templateId || templateId.includes('your_') ||
+      !publicKey || publicKey.includes('your_');
+
+    if (isUnconfigured) {
+      try {
+        const mailtoLink = createMailtoLink(formData);
+        await new Promise(resolve => setTimeout(resolve, 500));
+        window.location.href = mailtoLink;
+
+        toast({
+          title: "Message saved locally!",
+          description: "Opening mail client fallback. Message saved in your local messages.",
+        });
+
+        setSubmittedSuccess(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } catch (error) {
+        toast({
+          title: "Message saved",
+          description: "Saved in local messages.",
+        });
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    // Dispatch via real EmailJS client
     try {
-      // Save message locally
-      const savedMessage = saveMessage(formData);
-      
-      // Create mailto link and try to open it
-      const mailtoLink = createMailtoLink(formData);
-      
-      // Small delay to show loading state
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Try to open email client
-      window.location.href = mailtoLink;
-      
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        reply_to: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        to_name: 'Srajal',
+      };
+
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+
       toast({
-        title: "Message saved!",
-        description: "Opening your email client... Message also saved locally.",
+        title: "Message Transmitted!",
+        description: "Thank you! Your message has been sent successfully.",
       });
-      
-      // Reset form
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
-      });
-      
+
+      setSubmittedSuccess(true);
+      setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.warn('EmailJS Send Warning (400 Bad Request / Unconfigured credentials):', error);
+      
+      // Fallback to mailto link & local storage confirmation so user message is never lost
+      const mailtoLink = createMailtoLink(formData);
+      window.location.href = mailtoLink;
+
       toast({
-        title: "Message saved",
-        description: "Couldn't open email client, but your message is saved locally.",
+        title: "Message Saved Locally!",
+        description: "EmailJS API key/service needs setup. Opening mail client fallback — your message is safely stored in local messages.",
       });
+
+      setSubmittedSuccess(true);
+      setFormData({ name: '', email: '', subject: '', message: '' });
     } finally {
       setLoading(false);
     }
   };
-  
+
+  const socialNodes = [
+    { name: 'EMAIL', href: 'mailto:Srajalpuri55@gmail.com', icon: <Mail className="w-5 h-5 text-neon-purple" />, value: 'Srajalpuri55@gmail.com' },
+    { name: 'GITHUB', href: 'https://github.com/srajal5', icon: <Github className="w-5 h-5 text-neon-blue" />, value: '@srajal5' },
+    { name: 'LINKEDIN', href: 'https://linkedin.com', icon: <Linkedin className="w-5 h-5 text-neon-pink" />, value: 'Srajal Puri' },
+    { name: 'TWITTER', href: 'https://twitter.com', icon: <Twitter className="w-5 h-5 text-primary" />, value: '@srajal' },
+  ];
+
   return (
-    <section id="contact" className="section py-20">
+    <section id="contact" className="section py-28 relative overflow-hidden">
+      {/* Background glow */}
+      <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-neon-blue/5 rounded-full blur-[150px] pointer-events-none -z-10" />
+
       <div className="container mx-auto px-4">
-        <h2 className="section-heading text-center mb-12">Get In Touch</h2>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-1">
-            <div className="space-y-6">
-              <Card className="p-5 glassmorphism border-white/5">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                    <Mail className="w-5 h-5 text-primary" />
+        {/* Section Header */}
+        <div className="text-center mb-16 space-y-3">
+          <Reveal direction="down">
+            <span className="px-3.5 py-1 text-xs font-mono font-bold tracking-widest text-neon-pink uppercase bg-neon-pink/10 border border-neon-pink/20 rounded-full">
+              Transmission Channel
+            </span>
+          </Reveal>
+
+          <div className="flex justify-center">
+            <TextReveal
+              text="Let's Build Something"
+              as="h2"
+              className="text-4xl md:text-6xl font-black tracking-tight text-foreground"
+            />
+          </div>
+
+          <Reveal direction="up" delay={0.2}>
+            <p className="text-muted-foreground/80 font-light max-w-lg mx-auto text-base md:text-lg">
+              Have a project, 3D experience, or creative collaboration in mind? Send a direct transmission below.
+            </p>
+          </Reveal>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          {/* Left Column: Interactive Communication Network Nodes */}
+          <div className="lg:col-span-5 space-y-6">
+            <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-neon-blue" />
+              Communication Network
+            </h3>
+
+            <div className="space-y-4">
+              {socialNodes.map((node) => (
+                <motion.a
+                  key={node.name}
+                  href={node.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ x: 6, scale: 1.02 }}
+                  className="block p-5 rounded-2xl glassmorphism border-white/10 hover:border-neon-purple/40 transition-all duration-300 group"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 rounded-xl bg-white/5 border border-white/10 group-hover:bg-neon-purple/10 group-hover:border-neon-purple/30 transition-colors">
+                      {node.icon}
+                    </div>
+                    <div>
+                      <div className="text-xs font-mono font-bold uppercase text-muted-foreground/80 tracking-wider">
+                        {node.name}
+                      </div>
+                      <div className="text-sm font-semibold text-foreground group-hover:text-neon-purple transition-colors">
+                        {node.value}
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-medium">Email</h3>
-                    <p className="text-muted-foreground">Srajalpuri55@gmail.com</p>
-                  </div>
-                </div>
-              </Card>
-              
-              <Card className="p-5 glassmorphism border-white/5">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                    <MapPin className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium">Location</h3>
-                    <p className="text-muted-foreground">Lucknow, Uttar pradesh, India</p>
-                  </div>
-                </div>
-              </Card>
-              
-              <div className="p-5 glassmorphism border-white/5 rounded-lg">
-                <h3 className="font-medium mb-3">Follow Me</h3>
-                <div className="flex gap-3">
-                  {['github', 'twitter', 'linkedin', 'instagram'].map((social) => (
-                    <a 
-                      key={social}
-                      href="#"
-                      className="w-10 h-10 rounded-full bg-secondary/50 flex items-center justify-center hover:bg-primary/20 transition-colors"
-                    >
-                      <span className="w-5 h-5 text-foreground" />
-                    </a>
-                  ))}
-                </div>
+                </motion.a>
+              ))}
+            </div>
+
+            <div className="p-6 rounded-2xl glassmorphism border-white/10 space-y-3">
+              <div className="flex items-center gap-3">
+                <MapPin className="w-5 h-5 text-neon-blue" />
+                <span className="text-sm font-bold text-foreground">Location & Timezone</span>
               </div>
+              <p className="text-xs text-muted-foreground font-mono">
+                Pune, Maharashtra, India • IST (UTC +5:30)
+              </p>
             </div>
           </div>
-          
-          <div className="lg:col-span-2">
-            {showMessages && (
-              <Card className="p-6 glassmorphism border-white/5 mb-6">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-medium">Saved Messages ({messages.length})</h3>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={() => setShowMessages(false)}
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-                {messages.length === 0 ? (
-                  <p className="text-muted-foreground text-center py-4">No messages yet</p>
-                ) : (
-                  <div className="space-y-3 max-h-64 overflow-y-auto">
-                    {messages.map((msg) => (
-                      <div key={msg.id} className="p-3 bg-secondary/20 rounded-lg border border-white/5">
-                        <div className="flex justify-between items-start mb-2">
-                          <div className="text-sm font-medium">{msg.subject}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {new Date(msg.timestamp).toLocaleDateString()}
+
+          {/* Right Column: Interactive Form & Saved Messages View */}
+          <div className="lg:col-span-7 space-y-6">
+            {/* View Local Messages Toggle */}
+            <div className="flex justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowMessages(!showMessages)}
+                className="text-xs flex items-center gap-2 border-white/10 bg-white/5 hover:bg-white/10 font-mono"
+              >
+                <Eye className="w-3.5 h-3.5" />
+                {showMessages ? 'Hide' : 'View'} Saved Messages ({messages.length})
+              </Button>
+            </div>
+
+            {/* Saved Messages Drawer */}
+            <AnimatePresence>
+              {showMessages && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                >
+                  <Card className="p-6 glassmorphism border-white/15 mb-6 space-y-4">
+                    <div className="flex justify-between items-center">
+                      <h4 className="font-bold text-foreground text-sm uppercase font-mono">
+                        Saved Local Messages ({messages.length})
+                      </h4>
+                      <Button variant="ghost" size="sm" onClick={() => setShowMessages(false)}>
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    {messages.length === 0 ? (
+                      <p className="text-xs text-muted-foreground text-center py-6 font-mono">No messages saved yet.</p>
+                    ) : (
+                      <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
+                        {messages.map((msg) => (
+                          <div key={msg.id} className="p-3.5 rounded-xl bg-white/5 border border-white/5 space-y-1">
+                            <div className="flex justify-between text-xs font-mono font-bold text-foreground">
+                              <span>{msg.subject}</span>
+                              <span className="text-muted-foreground">{new Date(msg.timestamp).toLocaleDateString()}</span>
+                            </div>
+                            <div className="text-[11px] text-neon-blue font-mono">From: {msg.name} ({msg.email})</div>
+                            <p className="text-xs text-muted-foreground font-light pt-1">{msg.message}</p>
                           </div>
-                        </div>
-                        <div className="text-sm text-muted-foreground mb-1">
-                          From: {msg.name} ({msg.email})
-                        </div>
-                        <div className="text-sm">{msg.message}</div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    )}
+                  </Card>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Transmission Form */}
+            <Card className="p-6 sm:p-8 glassmorphism border-white/15 relative overflow-hidden">
+              <AnimatePresence mode="wait">
+                {submittedSuccess ? (
+                  <motion.div
+                    key="success"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="text-center py-12 space-y-6"
+                  >
+                    <div className="w-16 h-16 rounded-full bg-neon-purple/20 border border-neon-purple/50 flex items-center justify-center mx-auto text-neon-purple shadow-[0_0_25px_rgba(155,135,245,0.4)]">
+                      <CheckCircle2 className="w-8 h-8" />
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="text-2xl font-bold text-foreground">Message Transmitted</h4>
+                      <p className="text-sm text-muted-foreground max-w-md mx-auto font-light">
+                        Thank you! Your message has been safely received. I will get back to you shortly.
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={() => setSubmittedSuccess(false)}
+                      className="border-white/15 bg-white/5"
+                    >
+                      Send Another Message
+                    </Button>
+                  </motion.div>
+                ) : (
+                  <motion.form
+                    key="form"
+                    onSubmit={handleSubmit}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-5"
+                  >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <div className="space-y-2">
+                        <label className="text-xs font-mono font-bold uppercase text-muted-foreground">Your Name</label>
+                        <Input
+                          name="name"
+                          placeholder="Srajal Puri"
+                          value={formData.name}
+                          onChange={handleChange}
+                          className="bg-white/5 border-white/10 focus:border-neon-purple focus:ring-1 focus:ring-neon-purple rounded-xl text-sm"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-mono font-bold uppercase text-muted-foreground">Your Email</label>
+                        <Input
+                          name="email"
+                          type="email"
+                          placeholder="srajal@example.com"
+                          value={formData.email}
+                          onChange={handleChange}
+                          className="bg-white/5 border-white/10 focus:border-neon-purple focus:ring-1 focus:ring-neon-purple rounded-xl text-sm"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-mono font-bold uppercase text-muted-foreground">Subject</label>
+                      <Input
+                        name="subject"
+                        placeholder="Project Inquiry / 3D Experience Collaboration"
+                        value={formData.subject}
+                        onChange={handleChange}
+                        className="bg-white/5 border-white/10 focus:border-neon-purple focus:ring-1 focus:ring-neon-purple rounded-xl text-sm"
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-mono font-bold uppercase text-muted-foreground">Message</label>
+                      <Textarea
+                        name="message"
+                        placeholder="Tell me about your project goals, scope, or idea..."
+                        value={formData.message}
+                        onChange={handleChange}
+                        className="bg-white/5 border-white/10 focus:border-neon-purple focus:ring-1 focus:ring-neon-purple rounded-xl text-sm min-h-[140px]"
+                        required
+                      />
+                    </div>
+
+                    <MagneticButton magneticStrength={0.2} className="w-full">
+                      <Button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-gradient-to-r from-neon-purple to-neon-blue text-white border-0 font-bold py-6 rounded-xl shadow-[0_0_20px_rgba(155,135,245,0.3)] hover:shadow-[0_0_30px_rgba(155,135,245,0.6)] flex items-center justify-center gap-2"
+                      >
+                        {loading ? (
+                          'Transmitting Message...'
+                        ) : (
+                          <>
+                            Send Message Transmission <Send className="w-4 h-4" />
+                          </>
+                        )}
+                      </Button>
+                    </MagneticButton>
+                  </motion.form>
                 )}
-              </Card>
-            )}
-            
-            <Card className="p-6 glassmorphism border-white/5">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="font-medium">Send Message</h3>
-                <Button 
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowMessages(!showMessages)}
-                  className="text-xs flex items-center gap-2"
-                >
-                  <Eye className="w-3 h-3" />
-                  {showMessages ? 'Hide' : 'View'} Messages
-                </Button>
-              </div>
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
-                    <Input
-                      name="name"
-                      placeholder="Your Name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="bg-secondary/20 border-white/5"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Input
-                      name="email"
-                      type="email"
-                      placeholder="Your Email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="bg-secondary/20 border-white/5"
-                      required
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <Input
-                    name="subject"
-                    placeholder="Subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    className="bg-secondary/20 border-white/5"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <Textarea
-                    name="message"
-                    placeholder="Your Message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    className="bg-secondary/20 border-white/5 min-h-[150px]"
-                    required
-                  />
-                </div>
-                
-                <Button 
-                  type="submit" 
-                  disabled={loading}
-                  className="bg-gradient-to-r from-neon-purple to-neon-blue text-white border-0 flex items-center gap-2"
-                >
-                  {loading ? 'Sending...' : (
-                    <>
-                      Send Message <Send className="w-4 h-4" />
-                    </>
-                  )}
-                </Button>
-              </form>
+              </AnimatePresence>
             </Card>
           </div>
         </div>

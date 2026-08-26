@@ -1,66 +1,107 @@
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { PROJECTS_DATA, Project } from '@/data/projects';
 import ProjectCard from './ProjectCard';
-import ecom from '../Imagecomponents/Screenshot 2025-04-17 090906.png';
-import shareable from '../Imagecomponents/image.png';
-
-const projects = [
-  {
-    id: 1,
-    title: 'E-commerce Website',
-    description: 'Interactive E-commerce website with a modern and responsive design. It includes features like product listings, shopping cart, and checkout process.',
-    image: ecom,
-    technologies: ['JavaScript', 'React', 'Next.js', 'Tailwind CSS'],
-    demoUrl: 'https://e-commerce1-silk-one.vercel.app/',
-    codeUrl: 'https://github.com/srajal5/QuickCart',
-  },
-  {
-    id: 2,
-    title: 'File sharing website',
-    description: 'A file sharing website that allows users to share files with others. It includes features like file upload, download, and sharing.',
-    image: shareable,
-    technologies: ['JavaScript', 'React', 'Next.js', 'Tailwind CSS'],
-    demoUrl: 'https://filesharing-a6llxgsqu-srajal5s-projects.vercel.app/',
-    codeUrl: 'https://github.com/srajal5/shareable-filehub',
-  },
-  {
-    id: 3,
-    title: 'Immersive Web Experience',
-    description: 'Award-winning immersive scrolling experience with 3D parallax effects',
-    image: 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&q=80&w=200',
-    technologies: ['Three.js', 'GSAP', 'React'],
-    demoUrl: '#',
-    codeUrl: '#',
-  },
-  {
-    id: 4,
-    title: 'Virtual Reality Tour',
-    description: 'Web-based VR experience built using WebXR and Three.js',
-    image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&q=80&w=200',
-    technologies: ['WebXR', 'Three.js', 'React'],
-    demoUrl: '#',
-    codeUrl: '#',
-  },
-];
+import ProjectDetailModal from './projects/ProjectDetailModal';
+import { TextReveal, Reveal } from '@/components/animation/TextReveal';
 
 export default function ProjectsSection() {
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string>('All');
+
+  const categories = ['All', 'Full-Stack Web', '3D & WebGL', 'Web3 & Cloud', 'VR & Interactive'];
+
+  const filteredProjects = activeCategory === 'All'
+    ? PROJECTS_DATA
+    : PROJECTS_DATA.filter((p) => p.category === activeCategory);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.12,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: 'spring', stiffness: 90, damping: 14 },
+    },
+  };
+
   return (
-    <section id="projects" className="section py-20">
+    <section id="projects" className="section py-28 relative overflow-hidden">
+      {/* Background glow accent */}
+      <div className="absolute top-20 right-10 w-[400px] h-[400px] bg-neon-purple/5 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute bottom-10 left-10 w-[350px] h-[350px] bg-neon-blue/5 rounded-full blur-[130px] pointer-events-none -z-10" />
+
       <div className="container mx-auto px-4">
-        <h2 className="section-heading text-center mb-12">Projects</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-          {projects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              title={project.title}
-              description={project.description}
-              image={project.image}
-              technologies={project.technologies}
-              demoUrl={project.demoUrl}
-              codeUrl={project.codeUrl}
+        {/* Section Header */}
+        <div className="text-center mb-16 space-y-3">
+          <Reveal direction="down">
+            <span className="px-3.5 py-1 text-xs font-mono font-bold tracking-widest text-neon-blue uppercase bg-neon-blue/10 border border-neon-blue/20 rounded-full">
+              Portfolio & Engineering Works
+            </span>
+          </Reveal>
+          
+          <div className="flex justify-center">
+            <TextReveal
+              text="Featured Projects"
+              as="h2"
+              className="text-4xl md:text-6xl font-black tracking-tight text-foreground"
             />
-          ))}
+          </div>
+
+          <Reveal direction="up" delay={0.2}>
+            <p className="text-muted-foreground/80 font-light max-w-xl mx-auto text-base md:text-lg">
+              Explore custom full-stack web applications, WebGL visual shaders, and interactive digital experiences.
+            </p>
+          </Reveal>
+
+          {/* Category Filter Pills */}
+          <Reveal direction="up" delay={0.3} className="pt-6">
+            <div className="flex flex-wrap justify-center gap-2">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`px-4 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-300 ${
+                    activeCategory === cat
+                      ? 'bg-gradient-to-r from-neon-purple to-neon-blue text-white shadow-[0_0_15px_rgba(155,135,245,0.4)] scale-105'
+                      : 'bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground border border-white/10'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </Reveal>
         </div>
+
+        {/* Project Cards Grid */}
+        <motion.div
+          key={activeCategory}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+        >
+          {filteredProjects.map((project) => (
+            <motion.div key={project.id} variants={cardVariants}>
+              <ProjectCard project={project} onSelectProject={setSelectedProject} />
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
+
+      {/* Case Study Fullscreen Modal */}
+      <ProjectDetailModal project={selectedProject} onClose={() => setSelectedProject(null)} />
     </section>
   );
 }

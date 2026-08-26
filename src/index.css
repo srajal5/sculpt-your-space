@@ -48,6 +48,8 @@
 
   .glassmorphism {
     @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.3)];
+    will-change: transform;
+    transform: translateZ(0);
   }
   
   .section-heading {
@@ -81,7 +83,14 @@
   height: 100vh;
   z-index: -1;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 50%, #120d1f, #06050a);
+  background: radial-gradient(
+    ellipse 120% 100% at 50% 40%,
+    #1a0e2e 0%,
+    #120a22 20%,
+    #0a0714 45%,
+    #050308 70%,
+    #020103 100%
+  );
 }
 
 .content-container {
@@ -96,6 +105,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  scroll-margin-top: 5rem;
 }
 
 /* GSAP-inspired animations */

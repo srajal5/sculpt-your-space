@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F0C20" />
+      <stop offset="50%" stop-color="#1A1538" />
+      <stop offset="100%" stop-color="#05030A" />
+    </linearGradient>
+    <linearGradient id="accent-purple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9b87f5" />
+      <stop offset="100%" stop-color="#6E59A5" />
+    </linearGradient>
+    <linearGradient id="accent-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0EA5E9" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#9b87f5" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#0EA5E9" stop-opacity="0" />
+    </radialGradient>
+    <filter id="blur-glow">
+      <feGaussianBlur stdDeviation="20" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Layer -->
+  <rect width="600" height="750" fill="url(#bg-grad)" rx="24"/>
+
+  <!-- Cybernetic Grid Overlay -->
+  <g opacity="0.12" stroke="#9b87f5" stroke-width="1">
+    <path d="M0 75 h600 M0 150 h600 M0 225 h600 M0 300 h600 M0 375 h600 M0 450 h600 M0 525 h600 M0 600 h600 M0 675 h600"/>
+    <path d="M60 0 v750 M120 0 v750 M180 0 v750 M240 0 v750 M300 0 v750 M360 0 v750 M420 0 v750 M480 0 v750 M540 0 v750"/>
+  </g>
+
+  <!-- Radial Glow Behind Silhouette -->
+  <circle cx="300" cy="320" r="220" fill="url(#glow)"/>
+
+  <!-- Orbital Geometric Circles -->
+  <circle cx="300" cy="320" r="180" fill="none" stroke="url(#accent-purple)" stroke-width="1.5" stroke-dasharray="8 6" opacity="0.6"/>
+  <circle cx="300" cy="320" r="230" fill="none" stroke="url(#accent-blue)" stroke-width="1" stroke-dasharray="14 10" opacity="0.4"/>
+
+  <!-- Developer Silhouette Avatar Head & Shoulders -->
+  <g filter="url(#blur-glow)">
+    <!-- Shoulders -->
+    <path d="M 140 680 C 140 520, 210 460, 300 460 C 390 460, 460 520, 460 680 Z" fill="#1E193A" stroke="#9b87f5" stroke-width="2"/>
+    <!-- Head/Face outline -->
+    <ellipse cx="300" cy="310" rx="95" ry="125" fill="#15102A" stroke="url(#accent-blue)" stroke-width="2"/>
+    <!-- Cybernetic Visor / Glasses -->
+    <path d="M 230 290 Q 300 280 370 290 L 365 325 Q 300 340 235 325 Z" fill="url(#accent-purple)" opacity="0.85"/>
+    <line x1="220" y1="305" x2="380" y2="305" stroke="#0EA5E9" stroke-width="3" filter="url(#blur-glow)"/>
+  </g>
+
+  <!-- Decorative Corner Framing Lines -->
+  <path d="M 30 50 L 30 30 L 50 30" fill="none" stroke="#9b87f5" stroke-width="3"/>
+  <path d="M 570 50 L 570 30 L 550 30" fill="none" stroke="#9b87f5" stroke-width="3"/>
+  <path d="M 30 700 L 30 720 L 50 720" fill="none" stroke="#0EA5E9" stroke-width="3"/>
+  <path d="M 570 700 L 570 720 L 550 720" fill="none" stroke="#0EA5E9" stroke-width="3"/>
+
+  <!-- Tech Metadata Overlay Text -->
+  <text x="300" y="600" text-anchor="middle" fill="#9b87f5" font-family="monospace" font-size="16" font-weight="bold" letter-spacing="4">DEVELOPER PHOTO PLACEHOLDER</text>
+  <text x="300" y="630" text-anchor="middle" fill="#8E8A9F" font-family="sans-serif" font-size="13" letter-spacing="1">Replace with your profile image: public/profile.jpg</text>
+</svg>
