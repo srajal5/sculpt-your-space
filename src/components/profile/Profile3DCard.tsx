@@ -32,7 +32,7 @@ export default function Profile3DCard() {
   useEffect(() => {
     // Check reduced motion preference
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (mediaQuery.matches) {
+    if (import.meta.env.PROD && mediaQuery.matches) {
       setReducedMotion(true);
     }
 

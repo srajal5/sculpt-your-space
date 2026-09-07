@@ -23,7 +23,9 @@ export default function CustomCursor() {
     const touchCheck = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    if (touchCheck || reducedMotionQuery.matches) {
+    const isReduced = import.meta.env.PROD ? reducedMotionQuery.matches : false;
+
+    if (touchCheck || isReduced) {
       setIsTouchDevice(true);
       setReducedMotion(true);
       return;

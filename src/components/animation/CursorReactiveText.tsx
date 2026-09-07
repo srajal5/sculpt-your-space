@@ -361,7 +361,8 @@ export default function CursorReactiveText({
     const pointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
 
     const syncCapabilities = () => {
-      reducedMotionRef.current = motionQuery.matches || !pointerQuery.matches;
+      const isReduced = import.meta.env.PROD ? motionQuery.matches : false;
+      reducedMotionRef.current = isReduced || !pointerQuery.matches;
       interactiveRef.current = !reducedMotionRef.current;
       intensityRef.current = window.innerWidth < 1024 ? 0.6 : 1;
       if (reducedMotionRef.current) {

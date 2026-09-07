@@ -31,7 +31,8 @@ export default function TiltCard({
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const pointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
     const sync = () => {
-      canTiltRef.current = !motionQuery.matches && pointerQuery.matches;
+      const isReduced = import.meta.env.PROD ? motionQuery.matches : false;
+      canTiltRef.current = !isReduced && pointerQuery.matches;
     };
     sync();
     motionQuery.addEventListener('change', sync);
