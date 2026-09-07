@@ -3,6 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { PROFILE_DATA } from '@/data/profile';
 import { MapPin, GraduationCap, Building2, Sparkles, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { setCursorState } from '@/lib/cursor';
+import ProfileImg from '@/Imagecomponents/a757c937-345b-4de3-8ccb-97dd899bdbcc.png'
 
 export default function Profile3DCard() {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -181,7 +182,7 @@ export default function Profile3DCard() {
           className="relative w-full aspect-[4/3] rounded-xl overflow-hidden mb-5 border border-white/15 shadow-inner bg-slate-900 group/img"
         >
           <img
-            src={PROFILE_DATA.avatarUrl}
+            src={ProfileImg}
             alt={PROFILE_DATA.name}
             className="w-full h-full object-cover object-top transition-transform duration-700 group-hover/img:scale-105"
             onError={(e) => {
