@@ -1,3 +1,7 @@
+import nutritrackImg from '@/Imagecomponents/Screenshot 2026-09-05 203535.png';
+import sentinelImg from '@/Imagecomponents/Screenshot 2026-08-27 153000.png';
+import filehubImg from '@/Imagecomponents/image.png';
+
 export interface Project {
   id: string;
   number: string;
@@ -68,7 +72,7 @@ export const PROJECTS_DATA: Project[] = [
       'Designing reliable natural-language food analysis while maintaining structured nutritional data, integrating AI responses into a production-style full-stack workflow, and creating a unified development architecture that avoids unnecessary CORS and proxy complexity.',
     results:
       'Delivered a production-oriented AI nutrition platform with natural-language food tracking, personalized AI coaching, persistent nutrition data, interactive progress analytics, and a unified React + Express architecture.',
-    image: "./src/Imagecomponents/Screenshot 2026-09-05 203535.png",
+    image: nutritrackImg,
 
     demoUrl: 'https://nutritrack-eight.vercel.app/',
     codeUrl: 'https://github.com/srajal5/Nutritrack',
@@ -110,8 +114,7 @@ export const PROJECTS_DATA: Project[] = [
       'Achieving low-latency real-time detection and visualization across live CCTV feeds while maintaining reliable incident logging and emergency alert delivery.',
     results:
       'Delivered a real-time surveillance platform with automated incident detection, live dashboard visualization, and emergency alert coordination.',
-    image:
-      './src/Imagecomponents/Screenshot 2026-08-27 153000.png',
+    image: sentinelImg,
     demoUrl: '#',
     codeUrl: 'https://github.com/srajal5',
     featured: true,
@@ -165,8 +168,7 @@ export const PROJECTS_DATA: Project[] = [
       'Designing a secure and intuitive file-management workflow while handling large uploads, authentication state, storage limits, sharing permissions, responsive layouts, and cloud storage integration within a client-focused architecture.',
     results:
       'Delivered a production-oriented file-sharing platform with secure authentication, cloud file storage, file organization, searchable dashboards, subscription-aware storage limits, and unique file-sharing workflows.',
-    image:
-      './src/Imagecomponents/image.png',
+    image: filehubImg,
     demoUrl: 'https://filesharing-pi.vercel.app/',
     codeUrl: 'https://github.com/srajal5/Sharehub',
     featured: false,
