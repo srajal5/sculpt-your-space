@@ -39,7 +39,7 @@ export const PROFILE_DATA: ProfileData = {
   heroLead:
     'Building intelligent AI-powered applications and scalable full-stack systems with',
   bio: 'MCA student specializing in Artificial Intelligence, Generative AI, and Full Stack AI Engineering, with hands-on experience building AI-powered applications and workflows using Python, FastAPI, React.js, MongoDB, and LLM APIs. Experienced in scalable AI systems, REST APIs, real-time applications, and LLM-powered automation.',
-  avatarUrl: '/profile-avatar.svg',
+  avatarUrl: '..Imagecomponents/a757c937-345b-4de3-8ccb-97dd899bdbcc.png',
   socials: {
     github: 'https://github.com/srajal5',
     linkedin: 'https://www.linkedin.com/in/srajalpuri',

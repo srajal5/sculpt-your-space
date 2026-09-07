@@ -149,12 +149,9 @@ export default function RoleSwitcher({
                   text-lg sm:text-xl md:text-2xl
                   font-mono font-semibold tracking-wide
                   bg-gradient-to-r from-white via-purple-100 to-neon-cyan
-                  bg-clip-text text-transparent
+                  bg-clip-text
                   whitespace-nowrap transition-all duration-300
-                  ${isHovered
-                    ? 'drop-shadow-[0_0_22px_rgba(139,92,246,0.65)]'
-                    : 'drop-shadow-[0_0_16px_rgba(139,92,246,0.45)]'
-                  }
+                  
                 `}
               >
                 {currentRole}

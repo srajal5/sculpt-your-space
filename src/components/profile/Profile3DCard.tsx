@@ -20,7 +20,7 @@ export default function Profile3DCard() {
 
   // Smooth physical spring damping configuration
   const springConfig = { damping: 25, stiffness: 200, mass: 0.6 };
-  
+
   // Constrain max rotation to ~6-7 degrees for physical elegance
   const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [7, -7]), springConfig);
   const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-7, 7]), springConfig);
@@ -44,7 +44,7 @@ export default function Profile3DCard() {
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (reducedMotion || !cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
-    
+
     // Normalize coordinates from -0.5 (top/left) to 0.5 (bottom/right)
     const normX = (e.clientX - rect.left) / rect.width - 0.5;
     const normY = (e.clientY - rect.top) / rect.height - 0.5;
@@ -108,9 +108,9 @@ export default function Profile3DCard() {
           reducedMotion
             ? {}
             : {
-                y: isHovered ? -6 : [0, -10, 0],
-                rotateZ: isHovered ? 0 : [-0.5, 0.5, -0.5],
-              }
+              y: isHovered ? -6 : [0, -10, 0],
+              rotateZ: isHovered ? 0 : [-0.5, 0.5, -0.5],
+            }
         }
         transition={{
           y: isHovered ? { duration: 0.3 } : { duration: 6, repeat: Infinity, ease: 'easeInOut' },
@@ -181,7 +181,7 @@ export default function Profile3DCard() {
           className="relative w-full aspect-[4/3] rounded-xl overflow-hidden mb-5 border border-white/15 shadow-inner bg-slate-900 group/img"
         >
           <img
-            src={PROFILE_DATA.avatarUrl}
+            src="./src/Imagecomponents/a757c937-345b-4de3-8ccb-97dd899bdbcc.png"
             alt={PROFILE_DATA.name}
             className="w-full h-full object-cover object-top transition-transform duration-700 group-hover/img:scale-105"
             onError={(e) => {
