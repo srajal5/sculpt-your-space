@@ -181,7 +181,7 @@ export default function Profile3DCard() {
           className="relative w-full aspect-[4/3] rounded-xl overflow-hidden mb-5 border border-white/15 shadow-inner bg-slate-900 group/img"
         >
           <img
-            src="./src/Imagecomponents/a757c937-345b-4de3-8ccb-97dd899bdbcc.png"
+            src={PROFILE_DATA.avatarUrl}
             alt={PROFILE_DATA.name}
             className="w-full h-full object-cover object-top transition-transform duration-700 group-hover/img:scale-105"
             onError={(e) => {
