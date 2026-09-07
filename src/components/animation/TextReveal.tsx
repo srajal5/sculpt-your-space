@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 
 interface TextRevealProps {
   text: string;
@@ -8,51 +8,89 @@ interface TextRevealProps {
   as?: 'h1' | 'h2' | 'h3' | 'p' | 'span';
 }
 
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.055,
+      delayChildren: 0,
+    },
+  },
+};
+
+const letterVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 35,
+    rotateX: -70,
+    filter: 'blur(8px)',
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
+    filter: 'blur(0px)',
+    transition: {
+      type: 'spring',
+      stiffness: 120,
+      damping: 15,
+      mass: 0.7,
+    },
+  },
+};
+
+const gradientCharStyle: React.CSSProperties = {
+  background: 'inherit',
+  WebkitBackgroundClip: 'text',
+  backgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+};
+
 export function TextReveal({
   text,
   className = '',
   delay = 0,
   as: Component = 'h1',
 }: TextRevealProps) {
-  const words = text.split(' ');
+  const useGradientChars =
+    className.includes('bg-clip-text') || className.includes('text-transparent');
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
+  const resolvedContainerVariants: Variants = {
+    ...containerVariants,
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.06,
+        staggerChildren: 0.055,
         delayChildren: delay,
       },
     },
   };
 
-  const wordVariants = {
-    hidden: { opacity: 0, y: 24, filter: 'blur(8px)' },
-    visible: {
-      opacity: 1,
-      y: 0,
-      filter: 'blur(0px)',
-      transition: {
-        type: 'spring',
-        stiffness: 100,
-        damping: 15,
-      },
-    },
-  };
-
   return (
-    <Component className={`inline-flex flex-wrap gap-x-[0.3em] ${className}`}>
+    <Component
+      className={className}
+      style={{ perspective: 900 }}
+    >
       <motion.span
-        variants={containerVariants}
+        variants={resolvedContainerVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
-        className="inline-flex flex-wrap gap-x-[0.25em]"
+        className="inline-block"
+        style={{ transformStyle: 'preserve-3d' }}
       >
-        {words.map((word, idx) => (
-          <motion.span key={idx} variants={wordVariants} className="inline-block">
-            {word}
+        {Array.from(text).map((char, index) => (
+          <motion.span
+            key={`${char}-${index}`}
+            variants={letterVariants}
+            className="inline-block"
+            style={{
+              transformOrigin: 'bottom center',
+              ...(useGradientChars ? gradientCharStyle : undefined),
+            }}
+          >
+            {char === ' ' ? '\u00A0' : char}
           </motion.span>
         ))}
       </motion.span>
@@ -90,8 +128,8 @@ export function Reveal({
 
   return (
     <motion.div
-      initial={{ opacity: 0, ...getInitialPosition() }}
-      whileInView={{ opacity: 1, x: 0, y: 0 }}
+      initial={{ opacity: 0, filter: 'blur(6px)', ...getInitialPosition() }}
+      whileInView={{ opacity: 1, filter: 'blur(0px)', x: 0, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
       transition={{
         duration,

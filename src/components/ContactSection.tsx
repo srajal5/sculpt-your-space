@@ -174,7 +174,7 @@ export default function ContactSection() {
 
           <Reveal direction="up" delay={0.2}>
             <p className="text-muted-foreground/80 font-light max-w-lg mx-auto text-base md:text-lg">
-              Have a project, 3D experience, or creative collaboration in mind? Send a direct transmission below.
+              Have an AI project, full-stack collaboration, or engineering opportunity in mind? Send a direct transmission below.
             </p>
           </Reveal>
         </div>
@@ -345,7 +345,7 @@ export default function ContactSection() {
                       <label className="text-xs font-mono font-bold uppercase text-muted-foreground">Subject</label>
                       <Input
                         name="subject"
-                        placeholder="Project Inquiry / 3D Experience Collaboration"
+                        placeholder="AI Project / Full-Stack Collaboration Inquiry"
                         value={formData.subject}
                         onChange={handleChange}
                         className="bg-white/5 border-white/10 focus:border-neon-purple focus:ring-1 focus:ring-neon-purple rounded-xl text-sm"

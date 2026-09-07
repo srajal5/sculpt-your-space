@@ -142,3 +142,121 @@
 .ripple-effect:active {
   animation: ripple 0.6s linear;
 }
+
+.cursor-reactive-title {
+  --mouse-px-x: -500px;
+  --mouse-px-y: -500px;
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+  --spotlight-opacity: 0;
+  --glow-strength: 0.35;
+}
+
+.cursor-reactive-title .letter-fill {
+  transition: transform 0.15s ease-out;
+}
+
+/* Layer 2: Continuous title-wide spotlight overlay */
+.cursor-reactive-title .title-spotlight-overlay {
+  background-image: radial-gradient(
+    140px circle at var(--mouse-px-x, -500px) var(--mouse-px-y, -500px),
+    rgba(255, 255, 255, 1) 0%,
+    rgba(34, 211, 238, 0.95) 22%,
+    rgba(139, 92, 246, 0.8) 48%,
+    rgba(217, 70, 239, 0.45) 68%,
+    transparent 82%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  opacity: var(--spotlight-opacity, 0);
+  filter: drop-shadow(0 0 16px rgba(34, 211, 238, 0.9));
+  transition: opacity 0.2s ease-out;
+}
+
+/* Layer 5: Holographic sheen sweep */
+@keyframes title-holographic-sheen {
+  0% {
+    background-position: 180% 50%;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    background-position: -80% 50%;
+    opacity: 0;
+  }
+}
+
+.cursor-reactive-title .title-sheen-overlay {
+  background-image: linear-gradient(
+    110deg,
+    transparent 28%,
+    rgba(255, 255, 255, 0.95) 46%,
+    rgba(34, 211, 238, 0.85) 52%,
+    rgba(217, 70, 239, 0.6) 58%,
+    transparent 72%
+  );
+  background-size: 250% 100%;
+  background-position: 180% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.7));
+}
+
+.cursor-reactive-title.is-sheening .title-sheen-overlay {
+  animation: title-holographic-sheen 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.hero-tech-word {
+  text-shadow: 0 0 12px color-mix(in srgb, currentColor 22%, transparent);
+}
+
+.hero-tech-word .hero-tech-glow {
+  background: radial-gradient(circle, var(--tech-glow), transparent 70%);
+}
+
+.hero-tech-word:hover .hero-tech-glow {
+  opacity: 1;
+}
+
+.hero-tech-word:hover {
+  text-shadow: 0 0 18px color-mix(in srgb, currentColor 55%, transparent);
+  text-decoration-color: currentColor;
+}
+
+.hero-tech-stack:hover .hero-tech-plus {
+  color: rgb(255 255 255 / 0.45);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero-tech-word:hover + .hero-tech-plus,
+  .hero-tech-plus:has(+ .hero-tech-word:hover) {
+    color: rgb(196 181 253 / 0.9);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cursor-reactive-title .letter-fill {
+    --spotlight-opacity: 0;
+    filter: drop-shadow(0 0 16px rgba(139, 92, 246, 0.4));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-reactive-title .letter-fill {
+    animation: none;
+    filter: drop-shadow(0 0 14px rgba(139, 92, 246, 0.35));
+  }
+
+  .cursor-reactive-title.is-glitching .letter-fill {
+    clip-path: none;
+  }
+}

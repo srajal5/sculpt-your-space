@@ -214,11 +214,16 @@ export default function Profile3DCard() {
 
           {/* Education & Location Meta Rows */}
           <div className="space-y-1.5 pt-2 border-t border-white/10 text-xs text-slate-300">
-            <div className="flex items-center gap-2">
-              <GraduationCap className="w-3.5 h-3.5 text-neon-purple shrink-0" />
-              <span className="font-semibold text-white">{PROFILE_DATA.course}</span>
-              <span className="text-slate-500">•</span>
-              <span className="truncate text-slate-400">{PROFILE_DATA.college}</span>
+            <div className="flex items-start gap-2">
+              <GraduationCap className="w-3.5 h-3.5 text-neon-purple shrink-0 mt-0.5" />
+              <div className="min-w-0">
+                <span className="font-semibold text-white">{PROFILE_DATA.course}</span>
+                <span className="text-slate-500"> • </span>
+                <span className="text-slate-400">{PROFILE_DATA.college}</span>
+                <div className="text-[11px] text-slate-500 mt-0.5 font-mono">
+                  CGPA: {PROFILE_DATA.cgpa} · {PROFILE_DATA.educationPeriod}
+                </div>
+              </div>
             </div>
 
             <div className="flex items-center justify-between">
@@ -227,7 +232,7 @@ export default function Profile3DCard() {
                 <span className="text-slate-300">{PROFILE_DATA.location}</span>
               </div>
               <span className="text-[11px] font-mono text-neon-blue bg-neon-blue/10 px-2 py-0.5 rounded border border-neon-blue/20">
-                Full-Stack + 3D
+                AI + Full-Stack
               </span>
             </div>
           </div>
@@ -236,7 +241,7 @@ export default function Profile3DCard() {
         {/* BOTTOM TECHNICAL METADATA FOOTER */}
         <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-slate-400">
           <span className="hover:text-neon-purple transition-colors">
-            DEGREE: {PROFILE_DATA.course} ({PROFILE_DATA.graduationYear})
+            {PROFILE_DATA.course} · CGPA {PROFILE_DATA.cgpa}
           </span>
           <span className="hover:text-neon-cyan transition-colors">
             {PROFILE_DATA.location.toUpperCase()}

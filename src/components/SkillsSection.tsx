@@ -1,21 +1,22 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
-import { SKILL_NODES, SkillItem } from '@/data/skills';
+import { SKILL_NODES, SKILL_CATEGORIES, SkillItem } from '@/data/skills';
 import { TextReveal, Reveal } from '@/components/animation/TextReveal';
-import { Layers, Server, Palette, Terminal, Box, Sparkles, Check, Info, X } from 'lucide-react';
+import { Layers, Server, Terminal, Sparkles, Check, Info, X, Brain, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
+const categoryIcons: Record<SkillItem['category'], ReactNode> = {
+  languages: <Terminal className="w-4 h-4 text-neon-blue" />,
+  'ai-ml': <Brain className="w-4 h-4 text-neon-purple" />,
+  development: <Layers className="w-4 h-4 text-cyan-400" />,
+  'cloud-database': <Database className="w-4 h-4 text-neon-pink" />,
+  tools: <Server className="w-4 h-4 text-primary" />,
+};
 
 export default function SkillsSection() {
   const [selectedSkill, setSelectedSkill] = useState<SkillItem | null>(null);
-  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
-
-  const categories = [
-    { id: 'frontend', name: 'Frontend', icon: <Layers className="w-4 h-4 text-neon-purple" /> },
-    { id: '3d', name: '3D & WebGL', icon: <Box className="w-4 h-4 text-neon-blue" /> },
-    { id: 'backend', name: 'Backend', icon: <Server className="w-4 h-4 text-neon-pink" /> },
-    { id: 'tools', name: 'Tools & QA', icon: <Terminal className="w-4 h-4 text-primary" /> },
-  ];
+  const [hoveredCategory, setHoveredCategory] = useState<SkillItem['category'] | null>(null);
 
   const filteredSkills = hoveredCategory
     ? SKILL_NODES.filter((s) => s.category === hoveredCategory)
@@ -31,7 +32,7 @@ export default function SkillsSection() {
         <div className="text-center mb-16 space-y-3">
           <Reveal direction="down">
             <span className="px-3.5 py-1 text-xs font-mono font-bold tracking-widest text-neon-blue uppercase bg-neon-blue/10 border border-neon-blue/20 rounded-full">
-              Technology Matrix & Constellation
+              Resume-Aligned Technology Stack
             </span>
           </Reveal>
 
@@ -45,7 +46,7 @@ export default function SkillsSection() {
 
           <Reveal direction="up" delay={0.2}>
             <p className="text-muted-foreground/80 font-light max-w-xl mx-auto text-base md:text-lg">
-              Interactive visualization of core engineering competencies, frameworks, WebGL libraries, and QA toolsets.
+              Languages, AI/ML, full-stack development, cloud & database systems, and engineering tools from my resume.
             </p>
           </Reveal>
 
@@ -61,7 +62,7 @@ export default function SkillsSection() {
             >
               All Tech Stack ({SKILL_NODES.length})
             </button>
-            {categories.map((cat) => (
+            {SKILL_CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setHoveredCategory(cat.id)}
@@ -71,7 +72,7 @@ export default function SkillsSection() {
                     : 'bg-white/5 hover:bg-white/10 text-muted-foreground border border-white/10'
                 }`}
               >
-                {cat.icon}
+                {categoryIcons[cat.id]}
                 {cat.name}
               </button>
             ))}
@@ -90,7 +91,7 @@ export default function SkillsSection() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                whileHover={{ y: -6, scale: 1.02 }}
+                whileHover={{ y: -6, scale: 1.03 }}
                 onClick={() => setSelectedSkill(skill)}
                 className="cursor-pointer"
               >
@@ -98,7 +99,7 @@ export default function SkillsSection() {
                   className={`p-6 glassmorphism border-white/10 h-full flex flex-col justify-between transition-all duration-300 ${
                     isSelected
                       ? 'border-neon-purple shadow-[0_0_25px_rgba(155,135,245,0.3)] bg-neon-purple/10'
-                      : 'hover:border-white/20 hover:bg-white/10'
+                      : 'hover:border-neon-purple/40 hover:bg-white/10 hover:shadow-[0_0_22px_rgba(155,135,245,0.18)]'
                   }`}
                 >
                   <div>
@@ -152,7 +153,7 @@ export default function SkillsSection() {
                 <div className="flex justify-between items-start">
                   <div>
                     <span className="text-xs font-mono uppercase font-bold text-neon-blue px-2.5 py-0.5 rounded-full bg-neon-blue/10 border border-neon-blue/20">
-                      {selectedSkill.category.toUpperCase()} • {selectedSkill.proficiency}
+                      {selectedSkill.category.replace('-', ' / ').toUpperCase()} • {selectedSkill.proficiency}
                     </span>
                     <h3 className="text-2xl font-bold text-foreground mt-2">{selectedSkill.name}</h3>
                   </div>

@@ -14,7 +14,7 @@ export default function ProjectCard({ project, onSelectProject }: ProjectCardPro
   return (
     <TiltCard maxTiltDegrees={6} className="h-full group">
       <div
-        className="relative h-full rounded-2xl glassmorphism border border-white/10 hover:border-neon-purple/40 transition-all duration-500 overflow-hidden flex flex-col justify-between p-6 bg-gradient-to-b from-white/5 to-black/40 shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+        className="relative h-full rounded-2xl glassmorphism border border-white/10 hover:border-neon-purple/50 transition-all duration-500 overflow-hidden flex flex-col justify-between p-6 bg-gradient-to-b from-white/5 to-black/40 shadow-[0_10px_30px_rgba(0,0,0,0.5)] group-hover:shadow-[0_16px_40px_rgba(139,92,246,0.16)]"
         onMouseEnter={() => setCursorState('view', 'VIEW')}
         onMouseLeave={() => setCursorState('default')}
       >
@@ -36,7 +36,7 @@ export default function ProjectCard({ project, onSelectProject }: ProjectCardPro
           <img
             src={project.image}
             alt={project.title}
-            className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
+            className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.04]"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
           
@@ -66,7 +66,7 @@ export default function ProjectCard({ project, onSelectProject }: ProjectCardPro
           {project.technologies.slice(0, 4).map((tech) => (
             <span
               key={tech}
-              className="text-xs px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-muted-foreground/90 font-mono"
+              className="text-xs px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-muted-foreground/90 font-mono transition-colors duration-300 group-hover:border-neon-purple/30 group-hover:text-foreground"
             >
               {tech}
             </span>

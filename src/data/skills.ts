@@ -1,7 +1,7 @@
 export interface SkillItem {
   id: string;
   name: string;
-  category: 'frontend' | 'backend' | 'design' | 'tools' | '3d';
+  category: 'languages' | 'ai-ml' | 'development' | 'cloud-database' | 'tools';
   proficiency: 'Primary' | 'Advanced' | 'Working Knowledge';
   level: number;
   description: string;
@@ -9,203 +9,239 @@ export interface SkillItem {
   iconName: string;
 }
 
-export interface TimelineMilestone {
-  year: string;
-  stepNumber: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  technologies: string[];
-  highlight: string;
-}
-
 export const SKILL_NODES: SkillItem[] = [
-  // Frontend
+  // Languages
   {
-    id: 'react',
-    name: 'React 18',
-    category: 'frontend',
+    id: 'python',
+    name: 'Python',
+    category: 'languages',
     proficiency: 'Primary',
-    level: 95,
-    description: 'Component architecture, custom hooks, state management, and performance optimization.',
-    usedInProjects: ['Sculpt Your Space', 'QuickCart E-Commerce', 'Shareable FileHub'],
-    iconName: 'Code'
+    level: 80,
+    description:
+      'Async pipelines, FastAPI backends, AI workflows, and data processing for production AI systems.',
+    usedInProjects: ['IntelliForge', 'Sentinel AI'],
+    iconName: 'Terminal',
   },
   {
-    id: 'typescript',
-    name: 'TypeScript',
-    category: 'frontend',
-    proficiency: 'Primary',
-    level: 90,
-    description: 'Strict type safety, generics, utility types, and enterprise data models.',
-    usedInProjects: ['Sculpt Your Space', 'QuickCart E-Commerce'],
-    iconName: 'FileCode'
+    id: 'java',
+    name: 'Java',
+    category: 'languages',
+    proficiency: 'Advanced',
+    level: 75,
+    description: 'Object-oriented programming, backend development, and enterprise application patterns.',
+    usedInProjects: ['Academic Projects'],
+    iconName: 'FileCode',
   },
   {
     id: 'javascript',
-    name: 'JavaScript (ES6+)',
-    category: 'frontend',
+    name: 'JavaScript',
+    category: 'languages',
     proficiency: 'Primary',
-    level: 92,
-    description: 'Async/await, DOM APIs, Closures, Modules, and Modern ES Features.',
-    usedInProjects: ['All Projects'],
-    iconName: 'Terminal'
-  },
-  {
-    id: 'nextjs',
-    name: 'Next.js',
-    category: 'frontend',
-    proficiency: 'Primary',
-    level: 88,
-    description: 'Server Side Rendering (SSR), App Router, API routes, and static generation.',
-    usedInProjects: ['QuickCart E-Commerce', 'Shareable FileHub'],
-    iconName: 'Layers'
+    level: 80,
+    description: 'Modern ES6+, React.js applications, and interactive frontend development.',
+    usedInProjects: ['Sentinel AI', 'Orinson Technologies Internship'],
+    iconName: 'Code',
   },
 
-  // 3D & WebGL
+  // AI / ML
   {
-    id: 'threejs',
-    name: 'Three.js',
-    category: '3d',
+    id: 'generative-ai',
+    name: 'Generative AI',
+    category: 'ai-ml',
     proficiency: 'Primary',
-    level: 85,
-    description: '3D scene graph, camera matrices, lighting, geometry, and material pipelines.',
-    usedInProjects: ['Sculpt Your Space', 'Immersive 3D Canvas'],
-    iconName: 'Box'
+    level: 82,
+    description: 'LLM APIs, prompt engineering, Google Cloud AI services, and LLM-powered automation.',
+    usedInProjects: ['IntelliForge', 'Google Cloud GenAI Internship'],
+    iconName: 'Sparkles',
   },
   {
-    id: 'r3f',
-    name: 'React Three Fiber / Drei',
-    category: '3d',
-    proficiency: 'Primary',
-    level: 85,
-    description: 'Declarative 3D components, hook-based frame loops, and Orbit/Camera controllers.',
-    usedInProjects: ['Sculpt Your Space', 'Immersive 3D Canvas'],
-    iconName: 'Sparkles'
+    id: 'machine-learning',
+    name: 'Machine Learning',
+    category: 'ai-ml',
+    proficiency: 'Advanced',
+    level: 80,
+    description: 'ML model integration, training workflows, and intelligent system design.',
+    usedInProjects: ['Sentinel AI', 'IntelliForge'],
+    iconName: 'Brain',
   },
   {
-    id: 'webgl-glsl',
-    name: 'WebGL & GLSL',
-    category: '3d',
+    id: 'computer-vision',
+    name: 'Computer Vision',
+    category: 'ai-ml',
+    proficiency: 'Primary',
+    level: 80,
+    description: 'Real-time visual processing, object detection pipelines, and incident recognition systems.',
+    usedInProjects: ['Sentinel AI'],
+    iconName: 'Eye',
+  },
+  {
+    id: 'yolov8',
+    name: 'YOLOv8',
+    category: 'ai-ml',
+    proficiency: 'Primary',
+    level: 75,
+    description: 'Object detection for real-time accident and violence detection from CCTV feeds.',
+    usedInProjects: ['Sentinel AI'],
+    iconName: 'Box',
+  },
+  {
+    id: 'opencv',
+    name: 'OpenCV',
+    category: 'ai-ml',
+    proficiency: 'Advanced',
+    level: 75,
+    description: 'Video processing pipelines, frame analysis, and low-latency visual preprocessing.',
+    usedInProjects: ['Sentinel AI'],
+    iconName: 'Cpu',
+  },
+  {
+    id: 'pytorch',
+    name: 'PyTorch',
+    category: 'ai-ml',
+    proficiency: 'Working Knowledge',
+    level: 70,
+    description: 'Deep learning model development and neural network experimentation.',
+    usedInProjects: ['Academic AI Projects'],
+    iconName: 'Layers',
+  },
+
+  // Development
+  {
+    id: 'react',
+    name: 'React.js',
+    category: 'development',
+    proficiency: 'Primary',
+    level: 80,
+    description: 'Component architecture, state management, and responsive dashboard interfaces.',
+    usedInProjects: ['Sentinel AI', 'Orinson Technologies Internship'],
+    iconName: 'Code',
+  },
+  {
+    id: 'nodejs',
+    name: 'Node.js',
+    category: 'development',
+    proficiency: 'Advanced',
+    level: 80,
+    description: 'Server-side JavaScript runtime for API services and backend integrations.',
+    usedInProjects: ['Full-Stack Projects'],
+    iconName: 'Server',
+  },
+  {
+    id: 'express',
+    name: 'Express.js',
+    category: 'development',
     proficiency: 'Advanced',
     level: 78,
-    description: 'Custom vertex & fragment shaders, noise functions, and particle instancing.',
-    usedInProjects: ['Sculpt Your Space'],
-    iconName: 'Cpu'
+    description: 'RESTful API construction, middleware pipelines, and backend routing.',
+    usedInProjects: ['Full-Stack Projects'],
+    iconName: 'Server',
   },
-
-  // Styling & Motion
   {
     id: 'tailwind',
     name: 'Tailwind CSS',
-    category: 'frontend',
+    category: 'development',
     proficiency: 'Primary',
-    level: 95,
-    description: 'Utility-first responsive design, custom theme tokens, and glassmorphism styling.',
-    usedInProjects: ['All Projects'],
-    iconName: 'Palette'
+    level: 80,
+    description: 'Utility-first responsive design and modern UI development.',
+    usedInProjects: ['Sentinel AI', 'Orinson Technologies Internship'],
+    iconName: 'Palette',
   },
   {
-    id: 'framer-motion',
-    name: 'Framer Motion & GSAP',
-    category: 'frontend',
+    id: 'fastapi',
+    name: 'FastAPI',
+    category: 'development',
     proficiency: 'Primary',
-    level: 88,
-    description: 'Scroll-triggered choreography, spring physics, layout animations, and timeline controls.',
-    usedInProjects: ['Sculpt Your Space', 'Immersive 3D Canvas'],
-    iconName: 'Activity'
+    level: 75,
+    description: 'High-performance Python REST APIs for AI backends and real-time applications.',
+    usedInProjects: ['Sentinel AI', 'IntelliForge'],
+    iconName: 'Server',
   },
 
-  // Backend & Cloud
+  // Cloud & Database
   {
-    id: 'nodejs',
-    name: 'Node.js & Express',
-    category: 'backend',
+    id: 'google-cloud',
+    name: 'Google Cloud',
+    category: 'cloud-database',
     proficiency: 'Advanced',
-    level: 80,
-    description: 'RESTful API construction, middleware pipelines, and server runtime.',
-    usedInProjects: ['QuickCart E-Commerce', 'Shareable FileHub'],
-    iconName: 'Server'
+    level: 65,
+    description: 'Google Cloud AI services, Generative AI tools, and cloud-based AI workflows.',
+    usedInProjects: ['Google Cloud GenAI Internship'],
+    iconName: 'Cloud',
   },
   {
     id: 'mongodb',
     name: 'MongoDB',
-    category: 'backend',
-    proficiency: 'Working Knowledge',
-    level: 72,
-    description: 'NoSQL document schemas, aggregation frameworks, and database persistence.',
-    usedInProjects: ['QuickCart E-Commerce'],
-    iconName: 'Database'
+    category: 'cloud-database',
+    proficiency: 'Primary',
+    level: 75,
+    description: 'NoSQL document schemas, incident management, and AI pipeline data persistence.',
+    usedInProjects: ['IntelliForge', 'Sentinel AI'],
+    iconName: 'Database',
   },
   {
-    id: 'postgresql',
-    name: 'PostgreSQL',
-    category: 'backend',
+    id: 'mysql',
+    name: 'MySQL',
+    category: 'cloud-database',
+    proficiency: 'Working Knowledge',
+    level: 65,
+    description: 'Relational data models, SQL queries, and structured database management.',
+    usedInProjects: ['Academic Projects'],
+    iconName: 'Database',
+  },
+  {
+    id: 'supabase',
+    name: 'Supabase',
+    category: 'cloud-database',
     proficiency: 'Working Knowledge',
     level: 70,
-    description: 'Relational data models, SQL queries, indexing, and joins.',
-    usedInProjects: ['Backend Microservices'],
-    iconName: 'Database'
+    description: 'Backend-as-a-service with PostgreSQL, authentication, and real-time subscriptions.',
+    usedInProjects: ['Full-Stack Projects'],
+    iconName: 'Database',
   },
 
-  // Tools & QA
+  // Tools
   {
-    id: 'playwright',
-    name: 'Playwright E2E',
+    id: 'git',
+    name: 'Git',
+    category: 'tools',
+    proficiency: 'Primary',
+    level: 88,
+    description: 'Version control, branch workflows, and collaborative development practices.',
+    usedInProjects: ['All Projects'],
+    iconName: 'GitBranch',
+  },
+  {
+    id: 'github',
+    name: 'GitHub',
+    category: 'tools',
+    proficiency: 'Primary',
+    level: 90,
+    description: 'Repository management, code reviews, and open-source collaboration.',
+    usedInProjects: ['All Projects'],
+    iconName: 'GitBranch',
+  },
+  {
+    id: 'postman',
+    name: 'Postman',
     category: 'tools',
     proficiency: 'Advanced',
     level: 82,
-    description: 'Automated end-to-end integration testing, UI verification, and regression prevention.',
-    usedInProjects: ['Sculpt Your Space'],
-    iconName: 'CheckCircle'
+    description: 'API testing, REST endpoint validation, and integration debugging.',
+    usedInProjects: ['Sentinel AI', 'IntelliForge'],
+    iconName: 'Terminal',
   },
-  {
-    id: 'git-docker',
-    name: 'Git & Docker',
-    category: 'tools',
-    proficiency: 'Advanced',
-    level: 85,
-    description: 'Version control, branch workflows, containerization, and deployment pipelines.',
-    usedInProjects: ['All Projects'],
-    iconName: 'GitBranch'
-  }
 ];
 
-export const TIMELINE_MILESTONES: TimelineMilestone[] = [
-  {
-    year: '2023',
-    stepNumber: '01',
-    title: 'Core Foundations & Web Engineering',
-    subtitle: 'Mastering Full-Stack Web Development',
-    description: 'Deep-dived into modern JavaScript ES6+, React architecture, state management, and component-driven UI systems.',
-    technologies: ['HTML5/CSS3', 'JavaScript', 'React', 'Tailwind CSS'],
-    highlight: 'Built robust responsive web platforms and user interface systems.'
-  },
-  {
-    year: '2024',
-    stepNumber: '02',
-    title: 'Full-Stack & Cloud Applications',
-    subtitle: 'Scalable Products & Backends',
-    description: 'Expanded expertise into Next.js, Node.js API development, MongoDB/PostgreSQL database design, and cloud file management.',
-    technologies: ['Next.js', 'Node.js', 'Express', 'MongoDB', 'PostgreSQL'],
-    highlight: 'Engineered QuickCart E-Commerce and Shareable FileHub cloud platform.'
-  },
-  {
-    year: '2025',
-    stepNumber: '03',
-    title: '3D WebGL & Creative Engineering',
-    subtitle: 'Bridging Design & Immersive 3D',
-    description: 'Specialized in Three.js, React Three Fiber, WebGL shaders, volumetric particle systems, and hardware-accelerated visual graphics.',
-    technologies: ['Three.js', 'React Three Fiber', 'GLSL Shaders', 'Framer Motion', 'GSAP'],
-    highlight: 'Architected the interactive Sculpt Your Space portfolio environment.'
-  },
-  {
-    year: '2026+',
-    stepNumber: '04',
-    title: 'AI & Next-Gen Spatial Web',
-    subtitle: 'Pioneering Intelligent Digital Experiences',
-    description: 'Combining WebGL spatial computing, WebXR immersive tours, and AI intelligence pipelines to sculpt next-generation web platforms.',
-    technologies: ['WebXR', 'Spatial Computing', 'AI Integration', 'Performance Engineering'],
-    highlight: 'Building interactive high-impact digital experiences.'
-  }
+export interface SkillCategory {
+  id: SkillItem['category'];
+  name: string;
+  label: string;
+}
+
+export const SKILL_CATEGORIES: SkillCategory[] = [
+  { id: 'languages', name: 'Languages', label: 'LANGUAGES' },
+  { id: 'ai-ml', name: 'AI / ML', label: 'AI / ML' },
+  { id: 'development', name: 'Development', label: 'DEVELOPMENT' },
+  { id: 'cloud-database', name: 'Cloud & Database', label: 'CLOUD & DATABASE' },
+  { id: 'tools', name: 'Tools', label: 'TOOLS' },
 ];

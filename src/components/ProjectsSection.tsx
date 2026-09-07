@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { PROJECTS_DATA, Project } from '@/data/projects';
 import ProjectCard from './ProjectCard';
 import ProjectDetailModal from './projects/ProjectDetailModal';
@@ -9,7 +9,7 @@ export default function ProjectsSection() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('All');
 
-  const categories = ['All', 'Full-Stack Web', '3D & WebGL', 'Web3 & Cloud', 'VR & Interactive'];
+  const categories = ['All', 'AI Engineering', 'Computer Vision', 'Full-Stack Engineering'];
 
   const filteredProjects = activeCategory === 'All'
     ? PROJECTS_DATA
@@ -25,7 +25,7 @@ export default function ProjectsSection() {
     },
   };
 
-  const cardVariants = {
+  const cardVariants: Variants = {
     hidden: { opacity: 0, y: 40 },
     visible: {
       opacity: 1,
@@ -48,7 +48,7 @@ export default function ProjectsSection() {
               Portfolio & Engineering Works
             </span>
           </Reveal>
-          
+
           <div className="flex justify-center">
             <TextReveal
               text="Featured Projects"
@@ -59,7 +59,7 @@ export default function ProjectsSection() {
 
           <Reveal direction="up" delay={0.2}>
             <p className="text-muted-foreground/80 font-light max-w-xl mx-auto text-base md:text-lg">
-              Explore custom full-stack web applications, WebGL visual shaders, and interactive digital experiences.
+              AI engineering pipelines and computer vision platforms — IntelliForge and Sentinel AI.
             </p>
           </Reveal>
 
@@ -70,11 +70,10 @@ export default function ProjectsSection() {
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`px-4 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-300 ${
-                    activeCategory === cat
-                      ? 'bg-gradient-to-r from-neon-purple to-neon-blue text-white shadow-[0_0_15px_rgba(155,135,245,0.4)] scale-105'
-                      : 'bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground border border-white/10'
-                  }`}
+                  className={`px-4 py-1.5 rounded-full text-xs font-mono font-semibold transition-all duration-300 ${activeCategory === cat
+                    ? 'bg-gradient-to-r from-neon-purple to-neon-blue text-white shadow-[0_0_15px_rgba(155,135,245,0.4)] scale-105'
+                    : 'bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground border border-white/10'
+                    }`}
                 >
                   {cat}
                 </button>
