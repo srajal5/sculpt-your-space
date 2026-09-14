@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, type Variants } from 'framer-motion';
+import { useReducedMotionPreference } from '@/hooks/useReducedMotionPreference';
 
 interface TextRevealProps {
   text: string;
@@ -19,7 +20,7 @@ const containerVariants: Variants = {
   },
 };
 
-const letterVariants: Variants = {
+const letterVariantsNormal: Variants = {
   hidden: {
     opacity: 0,
     y: 35,
@@ -40,6 +41,19 @@ const letterVariants: Variants = {
   },
 };
 
+const letterVariantsReduced: Variants = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.35,
+      ease: 'easeOut',
+    },
+  },
+};
+
 const gradientCharStyle: React.CSSProperties = {
   background: 'inherit',
   WebkitBackgroundClip: 'text',
@@ -53,6 +67,7 @@ export function TextReveal({
   delay = 0,
   as: Component = 'h1',
 }: TextRevealProps) {
+  const reduceMotion = useReducedMotionPreference();
   const useGradientChars =
     className.includes('bg-clip-text') || className.includes('text-transparent');
 
@@ -61,16 +76,18 @@ export function TextReveal({
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.055,
+        staggerChildren: reduceMotion ? 0.03 : 0.055,
         delayChildren: delay,
       },
     },
   };
 
+  const letterVariants = reduceMotion ? letterVariantsReduced : letterVariantsNormal;
+
   return (
     <Component
       className={className}
-      style={{ perspective: 900 }}
+      style={{ perspective: reduceMotion ? undefined : 900 }}
     >
       <motion.span
         variants={resolvedContainerVariants}
@@ -78,7 +95,7 @@ export function TextReveal({
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
         className="inline-block"
-        style={{ transformStyle: 'preserve-3d' }}
+        style={{ transformStyle: reduceMotion ? 'flat' : 'preserve-3d' }}
       >
         {Array.from(text).map((char, index) => (
           <motion.span
@@ -113,7 +130,10 @@ export function Reveal({
   delay = 0,
   duration = 0.6,
 }: RevealProps) {
+  const reduceMotion = useReducedMotionPreference();
+
   const getInitialPosition = () => {
+    if (reduceMotion) return { x: 0, y: 0 };
     switch (direction) {
       case 'up':
         return { y: 40, x: 0 };
@@ -128,11 +148,20 @@ export function Reveal({
 
   return (
     <motion.div
-      initial={{ opacity: 0, filter: 'blur(6px)', ...getInitialPosition() }}
-      whileInView={{ opacity: 1, filter: 'blur(0px)', x: 0, y: 0 }}
+      initial={{
+        opacity: 0,
+        filter: reduceMotion ? 'none' : 'blur(6px)',
+        ...getInitialPosition(),
+      }}
+      whileInView={{
+        opacity: 1,
+        filter: 'blur(0px)',
+        x: 0,
+        y: 0,
+      }}
       viewport={{ once: true, amount: 0.15 }}
       transition={{
-        duration,
+        duration: reduceMotion ? Math.min(duration, 0.4) : duration,
         delay,
         ease: [0.25, 0.1, 0.25, 1],
       }}
@@ -142,3 +171,4 @@ export function Reveal({
     </motion.div>
   );
 }
+

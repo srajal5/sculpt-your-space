@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, useSpring, useMotionValue } from 'framer-motion';
+import { useReducedMotionPreference } from '@/hooks/useReducedMotionPreference';
 import { CursorMode } from '@/lib/cursor';
 
 export default function CustomCursor() {
@@ -7,7 +8,7 @@ export default function CustomCursor() {
   const [cursorText, setCursorText] = useState('');
   const [cursorMode, setCursorMode] = useState<CursorMode>('default');
   const [isTouchDevice, setIsTouchDevice] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const reducedMotion = useReducedMotionPreference();
 
   // Motion values for pointer coordinates
   const mouseX = useMotionValue(-100);
@@ -19,15 +20,10 @@ export default function CustomCursor() {
   const cursorY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
-    // Detect touch device or reduced motion preferences
+    // Detect touch device
     const touchCheck = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-    const isReduced = import.meta.env.PROD ? reducedMotionQuery.matches : false;
-
-    if (touchCheck || isReduced) {
+    if (touchCheck) {
       setIsTouchDevice(true);
-      setReducedMotion(true);
       return;
     }
 

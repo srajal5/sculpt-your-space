@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -57,15 +57,28 @@ export default function NebulaParticles() {
     return pos;
   }, []);
 
+  const isReducedRef = useRef(false);
+
+  useEffect(() => {
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => {
+      isReducedRef.current = motionQuery.matches;
+    };
+    update();
+    motionQuery.addEventListener('change', update);
+    return () => motionQuery.removeEventListener('change', update);
+  }, []);
+
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
+    const speed = isReducedRef.current ? 0.2 : 1;
     if (pointsRef.current) {
-      pointsRef.current.rotation.y = t * 0.015;
-      pointsRef.current.rotation.x = Math.sin(t * 0.01) * 0.1;
+      pointsRef.current.rotation.y = t * 0.015 * speed;
+      pointsRef.current.rotation.x = isReducedRef.current ? 0 : Math.sin(t * 0.01) * 0.1;
     }
     if (innerPointsRef.current) {
-      innerPointsRef.current.rotation.y = -t * 0.03;
-      innerPointsRef.current.rotation.z = t * 0.02;
+      innerPointsRef.current.rotation.y = -t * 0.03 * speed;
+      innerPointsRef.current.rotation.z = isReducedRef.current ? 0 : t * 0.02 * speed;
     }
   });
 

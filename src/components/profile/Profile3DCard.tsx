@@ -1,15 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useReducedMotionPreference } from '@/hooks/useReducedMotionPreference';
 import { PROFILE_DATA } from '@/data/profile';
 import { MapPin, GraduationCap, Building2, Sparkles, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { setCursorState } from '@/lib/cursor';
-import ProfileImg from '@/Imagecomponents/a757c937-345b-4de3-8ccb-97dd899bdbcc.png'
+import ProfileImg from '@/Imagecomponents/a757c937-345b-4de3-8ccb-97dd899bdbcc.png';
 
 export default function Profile3DCard() {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [scanned, setScanned] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const reduceMotion = useReducedMotionPreference();
 
   // Mouse position relative to card center (-0.5 to 0.5)
   const mouseX = useMotionValue(0);
@@ -31,20 +32,20 @@ export default function Profile3DCard() {
   const textZ = useSpring(useTransform(mouseY, [-0.5, 0.5], [25, -25]), springConfig);
 
   useEffect(() => {
-    // Check reduced motion preference
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (import.meta.env.PROD && mediaQuery.matches) {
-      setReducedMotion(true);
-    }
-
     // Trigger scanning line animation once on initial mount
     const timer = setTimeout(() => setScanned(true), 2500);
     return () => clearTimeout(timer);
   }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (reducedMotion || !cardRef.current) return;
+    if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
+
+    // Coordinates for light reflection spotlight
+    lightX.set(e.clientX - rect.left);
+    lightY.set(e.clientY - rect.top);
+
+    if (reduceMotion) return;
 
     // Normalize coordinates from -0.5 (top/left) to 0.5 (bottom/right)
     const normX = (e.clientX - rect.left) / rect.width - 0.5;
@@ -52,19 +53,14 @@ export default function Profile3DCard() {
 
     mouseX.set(normX);
     mouseY.set(normY);
-
-    lightX.set(e.clientX - rect.left);
-    lightY.set(e.clientY - rect.top);
   };
 
   const handleMouseEnter = () => {
-    if (reducedMotion) return;
     setIsHovered(true);
-    setCursorState('interact', 'CARD 3D');
+    setCursorState('interact', reduceMotion ? 'PROFILE' : 'CARD 3D');
   };
 
   const handleMouseLeave = () => {
-    if (reducedMotion) return;
     setIsHovered(false);
     mouseX.set(0);
     mouseY.set(0);
@@ -73,8 +69,8 @@ export default function Profile3DCard() {
 
   return (
     <div className="relative w-full max-w-[420px] mx-auto perspective-1000 py-4 select-none">
-      {/* Subtle Orbital Outer Ring (3D Background Layer) */}
-      {!reducedMotion && (
+      {/* Orbital Outer Ring Layer */}
+      {!reduceMotion ? (
         <motion.div
           className="absolute -inset-10 rounded-full border border-neon-purple/20 pointer-events-none z-0"
           animate={{
@@ -92,32 +88,55 @@ export default function Profile3DCard() {
             background: 'radial-gradient(circle, rgba(155,135,245,0.05) 0%, transparent 70%)',
           }}
         />
+      ) : (
+        <motion.div
+          className="absolute -inset-8 rounded-full border border-neon-purple/25 pointer-events-none z-0"
+          animate={{
+            opacity: [0.4, 0.75, 0.4],
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+          style={{
+            background: 'radial-gradient(circle, rgba(155,135,245,0.06) 0%, transparent 70%)',
+          }}
+        />
       )}
 
-      {/* Main Interactive 3D Floating Glass Profile Card */}
+      {/* Main Interactive Glass Profile Card */}
       <motion.div
         ref={cardRef}
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         style={{
-          rotateX: reducedMotion ? 0 : rotateX,
-          rotateY: reducedMotion ? 0 : rotateY,
-          transformStyle: 'preserve-3d',
+          rotateX: reduceMotion ? 0 : rotateX,
+          rotateY: reduceMotion ? 0 : rotateY,
+          transformStyle: reduceMotion ? 'flat' : 'preserve-3d',
         }}
         animate={
-          reducedMotion
-            ? {}
+          reduceMotion
+            ? {
+                boxShadow: isHovered
+                  ? '0 25px 70px rgba(0,0,0,0.9), 0 0 45px rgba(14,165,233,0.3)'
+                  : '0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(155,135,245,0.15)',
+              }
             : {
-              y: isHovered ? -6 : [0, -10, 0],
-              rotateZ: isHovered ? 0 : [-0.5, 0.5, -0.5],
-            }
+                y: isHovered ? -6 : [0, -10, 0],
+                rotateZ: isHovered ? 0 : [-0.5, 0.5, -0.5],
+              }
         }
-        transition={{
-          y: isHovered ? { duration: 0.3 } : { duration: 6, repeat: Infinity, ease: 'easeInOut' },
-          rotateZ: { duration: 7, repeat: Infinity, ease: 'easeInOut' },
-        }}
-        className="relative z-10 w-full rounded-2xl border border-white/15 bg-slate-950/60 backdrop-blur-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(155,135,245,0.15)] transition-shadow duration-500 hover:shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_45px_rgba(14,165,233,0.25)] group overflow-hidden"
+        transition={
+          reduceMotion
+            ? { duration: 0.3 }
+            : {
+                y: isHovered ? { duration: 0.3 } : { duration: 6, repeat: Infinity, ease: 'easeInOut' },
+                rotateZ: { duration: 7, repeat: Infinity, ease: 'easeInOut' },
+              }
+        }
+        className="relative z-10 w-full rounded-2xl border border-white/15 bg-slate-950/60 backdrop-blur-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(155,135,245,0.15)] transition-all duration-300 hover:border-white/30 group overflow-hidden"
       >
         {/* Dynamic Light Reflection Spotlight (Follows Cursor) */}
         <motion.div
@@ -126,7 +145,7 @@ export default function Profile3DCard() {
             background: useTransform(
               [lightX, lightY],
               ([x, y]) =>
-                `radial-gradient(400px circle at ${x}px ${y}px, rgba(255,255,255,0.12), rgba(155,135,245,0.08) 40%, transparent 80%)`
+                `radial-gradient(400px circle at ${x}px ${y}px, rgba(255,255,255,0.14), rgba(155,135,245,0.09) 40%, transparent 80%)`
             ),
           }}
         />
@@ -167,18 +186,18 @@ export default function Profile3DCard() {
           </div>
           {isHovered && (
             <motion.span
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className="text-[10px] font-mono text-neon-cyan bg-neon-cyan/10 border border-neon-cyan/30 px-2 py-0.5 rounded"
             >
-              INTERACTIVE 3D
+              {reduceMotion ? 'ACCESSIBLE PROFILE' : 'INTERACTIVE 3D'}
             </motion.span>
           )}
         </div>
 
         {/* PROFILE PORTRAIT IMAGE AREA (PARALLAX LAYER) */}
         <motion.div
-          style={{ translateZ: imgZ }}
+          style={{ translateZ: reduceMotion ? 0 : imgZ }}
           className="relative w-full aspect-[4/3] rounded-xl overflow-hidden mb-5 border border-white/15 shadow-inner bg-slate-900 group/img"
         >
           <img
@@ -201,7 +220,7 @@ export default function Profile3DCard() {
         </motion.div>
 
         {/* PROFILE INFORMATION (PARALLAX LAYER) */}
-        <motion.div style={{ translateZ: textZ }} className="space-y-3">
+        <motion.div style={{ translateZ: reduceMotion ? 0 : textZ }} className="space-y-3">
           {/* Name & Primary Role */}
           <div>
             <h3 className="text-2xl font-black tracking-tight text-white flex items-center gap-2">

@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { motion, useMotionTemplate, useSpring } from 'framer-motion';
+import { useReducedMotionPreference } from '@/hooks/useReducedMotionPreference';
 
 interface TiltCardProps {
   children: React.ReactNode;
@@ -15,7 +16,7 @@ export default function TiltCard({
   glowColor = 'rgba(155, 135, 245, 0.18)',
 }: TiltCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const canTiltRef = useRef(true);
+  const reduceMotion = useReducedMotionPreference();
 
   const springConfig = { stiffness: 260, damping: 22, mass: 0.45 };
   const rotateX = useSpring(0, springConfig);
@@ -27,40 +28,29 @@ export default function TiltCard({
 
   const glowBackground = useMotionTemplate`radial-gradient(420px circle at ${glowX}% ${glowY}%, ${glowColor}, transparent 42%)`;
 
-  useEffect(() => {
-    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const pointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
-    const sync = () => {
-      const isReduced = import.meta.env.PROD ? motionQuery.matches : false;
-      canTiltRef.current = !isReduced && pointerQuery.matches;
-    };
-    sync();
-    motionQuery.addEventListener('change', sync);
-    pointerQuery.addEventListener('change', sync);
-    return () => {
-      motionQuery.removeEventListener('change', sync);
-      pointerQuery.removeEventListener('change', sync);
-    };
-  }, []);
-
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!canTiltRef.current || !cardRef.current) return;
+    if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
+
+    glowX.set((mouseX / rect.width) * 100);
+    glowY.set((mouseY / rect.height) * 100);
+
+    if (reduceMotion) return;
+
     const normalizedX = (mouseX / rect.width) * 2 - 1;
     const normalizedY = (mouseY / rect.height) * 2 - 1;
 
     rotateX.set(-normalizedY * maxTiltDegrees);
     rotateY.set(normalizedX * maxTiltDegrees);
-    glowX.set((mouseX / rect.width) * 100);
-    glowY.set((mouseY / rect.height) * 100);
   };
 
   const handleMouseEnter = () => {
-    if (!canTiltRef.current) return;
     glowOpacity.set(1);
-    liftY.set(-4);
+    if (!reduceMotion) {
+      liftY.set(-4);
+    }
   };
 
   const handleMouseLeave = () => {
@@ -79,10 +69,10 @@ export default function TiltCard({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{
-        rotateX,
-        rotateY,
-        y: liftY,
-        transformStyle: 'preserve-3d',
+        rotateX: reduceMotion ? 0 : rotateX,
+        rotateY: reduceMotion ? 0 : rotateY,
+        y: reduceMotion ? 0 : liftY,
+        transformStyle: reduceMotion ? 'flat' : 'preserve-3d',
       }}
       className={`relative perspective-1000 ${className}`}
     >

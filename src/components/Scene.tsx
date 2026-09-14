@@ -17,26 +17,44 @@ function SmoothCameraController() {
   const { camera } = useThree();
   const mouse = useRef({ x: 0, y: 0 });
   const target = useRef(new THREE.Vector3(0, 0, 7));
+  const isReducedRef = useRef(false);
 
   useEffect(() => {
     camera.position.set(0, 0, 7);
 
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const updateMotion = () => {
+      isReducedRef.current = motionQuery.matches;
+    };
+    updateMotion();
+    motionQuery.addEventListener('change', updateMotion);
+
     const handleMouseMove = (e: MouseEvent) => {
+      if (isReducedRef.current) return;
       mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       mouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => {
+      motionQuery.removeEventListener('change', updateMotion);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
   }, [camera]);
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
 
-    // Target position based on mouse + gentle breathing
-    target.current.x = mouse.current.x * 1.5;
-    target.current.y = mouse.current.y * 1.0 + Math.sin(t * 0.3) * 0.15;
-    target.current.z = 7 + Math.sin(t * 0.2) * 0.3;
+    if (isReducedRef.current) {
+      target.current.x = 0;
+      target.current.y = 0;
+      target.current.z = 7;
+    } else {
+      // Target position based on mouse + gentle breathing
+      target.current.x = mouse.current.x * 1.5;
+      target.current.y = mouse.current.y * 1.0 + Math.sin(t * 0.3) * 0.15;
+      target.current.z = 7 + Math.sin(t * 0.2) * 0.3;
+    }
 
     // Smooth interpolation
     camera.position.x += (target.current.x - camera.position.x) * 0.03;

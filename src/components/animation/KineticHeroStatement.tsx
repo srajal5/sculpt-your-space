@@ -49,7 +49,7 @@ const TECH_ITEMS: TechItem[] = [
   },
 ];
 
-const wordVariants: Variants = {
+const wordVariantsNormal: Variants = {
   hidden: {
     opacity: 0,
     y: 12,
@@ -62,6 +62,19 @@ const wordVariants: Variants = {
     transition: {
       duration: 0.32,
       ease: [0.25, 0.1, 0.25, 1],
+    },
+  },
+};
+
+const wordVariantsReduced: Variants = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.3,
+      ease: 'easeOut',
     },
   },
 };
@@ -88,6 +101,7 @@ const techVariants: Variants = {
 
 export default function KineticHeroStatement() {
   const reduceMotion = useReducedMotionPreference();
+  const wordVariants = reduceMotion ? wordVariantsReduced : wordVariantsNormal;
 
   return (
     <div className="mb-5 max-w-4xl">
@@ -120,7 +134,7 @@ export default function KineticHeroStatement() {
       >
         {TECH_ITEMS.map((tech, index) => (
           <span key={tech.label} className="inline-block">
-            <TechWord tech={tech} />
+            <TechWord tech={tech} reduceMotion={reduceMotion} wordVariants={wordVariants} />
             {index < TECH_ITEMS.length - 1 && (
               <span className="hero-tech-plus mx-1.5 sm:mx-2 text-white/25 font-light">
                 +
@@ -133,14 +147,26 @@ export default function KineticHeroStatement() {
   );
 }
 
-function TechWord({ tech }: { tech: TechItem }) {
+function TechWord({
+  tech,
+  reduceMotion,
+  wordVariants,
+}: {
+  tech: TechItem;
+  reduceMotion: boolean;
+  wordVariants: Variants;
+}) {
   return (
     <motion.span
       variants={wordVariants}
-      whileHover={{
-        y: -2,
-        scale: 1.02,
-      }}
+      whileHover={
+        !reduceMotion
+          ? {
+              y: -2,
+              scale: 1.02,
+            }
+          : undefined
+      }
       transition={{ type: 'spring', stiffness: 340, damping: 18 }}
       className={`hero-tech-word relative inline-block cursor-default font-semibold underline decoration-2 underline-offset-[6px] ${tech.className}`}
       style={{ '--tech-glow': tech.glow } as CSSProperties}
@@ -155,3 +181,4 @@ function TechWord({ tech }: { tech: TechItem }) {
     </motion.span>
   );
 }
+

@@ -39,7 +39,7 @@ export default function RoleSwitcher({
   const totalRolesFormatted = String(roles.length).padStart(2, '0');
 
   // Entrance & Exit animation variants
-  // The exit preserves full readability (>90% opacity) for 65% of the exit time while moving up
+  // In reduced motion mode: pure opacity crossfade without displacement or blur
   const roleVariants: Variants = {
     hidden: {
       opacity: 0,
@@ -53,33 +53,33 @@ export default function RoleSwitcher({
       scale: 1,
       filter: 'blur(0px)',
       transition: {
-        duration: reduceMotion ? 0.25 : 0.38,
-        ease: [0.16, 1, 0.3, 1],
+        duration: reduceMotion ? 0.3 : 0.38,
+        ease: reduceMotion ? 'easeOut' : [0.16, 1, 0.3, 1],
       },
     },
     exit: {
-      opacity: [1, 0.92, 0],
+      opacity: reduceMotion ? 0 : [1, 0.92, 0],
       y: reduceMotion ? 0 : -14,
       scale: reduceMotion ? 1 : 0.985,
       filter: reduceMotion ? 'none' : 'blur(1.5px)',
       transition: {
-        duration: reduceMotion ? 0.2 : 0.34,
-        times: [0, 0.65, 1],
-        ease: [0.4, 0, 0.7, 1],
+        duration: reduceMotion ? 0.25 : 0.34,
+        times: reduceMotion ? undefined : [0, 0.65, 1],
+        ease: reduceMotion ? 'easeIn' : [0.4, 0, 0.7, 1],
       },
     },
   };
 
   // Subtly animate the technical index counter
   const indexVariants: Variants = {
-    initial: { opacity: 0.4, y: reduceMotion ? 0 : 4 },
+    initial: { opacity: reduceMotion ? 0 : 0.4, y: reduceMotion ? 0 : 4 },
     animate: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.28, ease: 'easeOut' },
+      transition: { duration: 0.25, ease: 'easeOut' },
     },
     exit: {
-      opacity: 0.2,
+      opacity: 0,
       y: reduceMotion ? 0 : -4,
       transition: { duration: 0.2, ease: 'easeIn' },
     },

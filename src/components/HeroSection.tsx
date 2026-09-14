@@ -205,36 +205,36 @@ export default function HeroSection() {
       {/* =========================================
           FLOATING DECORATIVE MICRO-UI
       ========================================== */}
-      {!reduceMotion && (
-        <>
-          <motion.div
-            aria-hidden="true"
-            className="pointer-events-none absolute top-32 right-10 hidden xl:flex flex-col gap-2 font-mono text-[10px] text-white/40 select-none z-0"
-            animate={{ y: [0, -6, 0] }}
-            transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <div className="flex items-center gap-2 px-2.5 py-1 rounded-md border border-white/10 bg-white/5 backdrop-blur-md shadow-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-neon-cyan font-semibold">SYS_STATE //</span>
-              <span className="text-emerald-400 font-bold">ONLINE</span>
-            </div>
-            <div className="flex items-center gap-2 px-2.5 py-1 rounded-md border border-white/10 bg-white/5 backdrop-blur-md shadow-sm">
-              <span className="text-neon-purple font-semibold">EDUCATION //</span>
-              <span className="text-slate-300">MCA ({PROFILE_DATA.cgpa} CGPA)</span>
-            </div>
-          </motion.div>
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-32 right-10 hidden xl:flex flex-col gap-2 font-mono text-[10px] text-white/40 select-none z-0"
+        animate={
+          !reduceMotion
+            ? { y: [0, -6, 0] }
+            : { opacity: [0.75, 1, 0.75] }
+        }
+        transition={{ duration: !reduceMotion ? 7 : 5, repeat: Infinity, ease: 'easeInOut' }}
+      >
+        <div className="flex items-center gap-2 px-2.5 py-1 rounded-md border border-white/10 bg-white/5 backdrop-blur-md shadow-sm">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-neon-cyan font-semibold">SYS_STATE //</span>
+          <span className="text-emerald-400 font-bold">ONLINE</span>
+        </div>
+        <div className="flex items-center gap-2 px-2.5 py-1 rounded-md border border-white/10 bg-white/5 backdrop-blur-md shadow-sm">
+          <span className="text-neon-purple font-semibold">EDUCATION //</span>
+          <span className="text-slate-300">MCA ({PROFILE_DATA.cgpa} CGPA)</span>
+        </div>
+      </motion.div>
 
-          <motion.div
-            aria-hidden="true"
-            className="pointer-events-none absolute top-44 left-8 hidden 2xl:flex items-center gap-2 font-mono text-[9px] text-neon-blue/50 uppercase tracking-widest z-0"
-            animate={{ opacity: [0.4, 0.8, 0.4] }}
-            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <span className="w-2 h-2 border-t border-l border-neon-blue/60" />
-            <span>AI ENGINE // Dr. D. Y. Patil SST · Pune</span>
-          </motion.div>
-        </>
-      )}
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-44 left-8 hidden 2xl:flex items-center gap-2 font-mono text-[9px] text-neon-blue/50 uppercase tracking-widest z-0"
+        animate={{ opacity: [0.4, 0.8, 0.4] }}
+        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+      >
+        <span className="w-2 h-2 border-t border-l border-neon-blue/60" />
+        <span>AI ENGINE // Dr. D. Y. Patil SST · Pune</span>
+      </motion.div>
 
       {/* =========================================
           MAIN HERO CONTAINER
@@ -355,7 +355,7 @@ export default function HeroSection() {
               >
                 MCA student specializing in{' '}
                 <motion.span
-                  whileHover={{ y: -1, scale: 1.015 }}
+                  whileHover={!reduceMotion ? { y: -1, scale: 1.015 } : undefined}
                   className="inline-block text-neon-purple font-medium cursor-default transition-all duration-200 hover:drop-shadow-[0_0_8px_rgba(155,135,245,0.8)]"
                   onMouseEnter={() => setCursorState('hover')}
                   onMouseLeave={() => setCursorState('default')}
@@ -364,7 +364,7 @@ export default function HeroSection() {
                 </motion.span>
                 ,{' '}
                 <motion.span
-                  whileHover={{ y: -1, scale: 1.015 }}
+                  whileHover={!reduceMotion ? { y: -1, scale: 1.015 } : undefined}
                   className="inline-block text-neon-purple font-medium cursor-default transition-all duration-200 hover:drop-shadow-[0_0_8px_rgba(155,135,245,0.8)]"
                   onMouseEnter={() => setCursorState('hover')}
                   onMouseLeave={() => setCursorState('default')}
@@ -373,7 +373,7 @@ export default function HeroSection() {
                 </motion.span>
                 , and{' '}
                 <motion.span
-                  whileHover={{ y: -1, scale: 1.015 }}
+                  whileHover={!reduceMotion ? { y: -1, scale: 1.015 } : undefined}
                   className="inline-block text-white/95 font-medium cursor-default transition-all duration-200 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]"
                   onMouseEnter={() => setCursorState('hover')}
                   onMouseLeave={() => setCursorState('default')}
@@ -382,7 +382,7 @@ export default function HeroSection() {
                 </motion.span>{' '}
                 — building AI-powered applications and workflows with{' '}
                 <motion.span
-                  whileHover={{ y: -1, scale: 1.015 }}
+                  whileHover={!reduceMotion ? { y: -1, scale: 1.015 } : undefined}
                   className="inline-block text-neon-blue font-medium cursor-default transition-all duration-200 hover:drop-shadow-[0_0_8px_rgba(14,165,233,0.8)]"
                   onMouseEnter={() => setCursorState('hover')}
                   onMouseLeave={() => setCursorState('default')}
@@ -391,7 +391,7 @@ export default function HeroSection() {
                 </motion.span>
                 ,{' '}
                 <motion.span
-                  whileHover={{ y: -1, scale: 1.015 }}
+                  whileHover={!reduceMotion ? { y: -1, scale: 1.015 } : undefined}
                   className="inline-block text-emerald-400 font-medium cursor-default transition-all duration-200 hover:drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]"
                   onMouseEnter={() => setCursorState('hover')}
                   onMouseLeave={() => setCursorState('default')}
@@ -400,7 +400,7 @@ export default function HeroSection() {
                 </motion.span>
                 ,{' '}
                 <motion.span
-                  whileHover={{ y: -1, scale: 1.015 }}
+                  whileHover={!reduceMotion ? { y: -1, scale: 1.015 } : undefined}
                   className="inline-block text-cyan-400 font-medium cursor-default transition-all duration-200 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]"
                   onMouseEnter={() => setCursorState('hover')}
                   onMouseLeave={() => setCursorState('default')}
@@ -409,7 +409,7 @@ export default function HeroSection() {
                 </motion.span>
                 ,{' '}
                 <motion.span
-                  whileHover={{ y: -1, scale: 1.015 }}
+                  whileHover={!reduceMotion ? { y: -1, scale: 1.015 } : undefined}
                   className="inline-block text-purple-300 font-medium cursor-default transition-all duration-200 hover:drop-shadow-[0_0_8px_rgba(216,180,254,0.8)]"
                   onMouseEnter={() => setCursorState('hover')}
                   onMouseLeave={() => setCursorState('default')}
@@ -418,7 +418,7 @@ export default function HeroSection() {
                 </motion.span>
                 , and{' '}
                 <motion.span
-                  whileHover={{ y: -1, scale: 1.015 }}
+                  whileHover={!reduceMotion ? { y: -1, scale: 1.015 } : undefined}
                   className="inline-block text-neon-pink font-medium cursor-default transition-all duration-200 hover:drop-shadow-[0_0_8px_rgba(217,70,239,0.8)]"
                   onMouseEnter={() => setCursorState('hover')}
                   onMouseLeave={() => setCursorState('default')}
@@ -595,16 +595,21 @@ export default function HeroSection() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  whileHover={{
-                    scale: 1.15,
-                    y: -3,
-                    backgroundColor:
-                      'rgba(155, 135, 245, 0.2)',
-                    borderColor:
-                      'rgba(155, 135, 245, 0.4)',
-                    boxShadow:
-                      '0 0 20px rgba(155, 135, 245, 0.25)',
-                  }}
+                  whileHover={
+                    !reduceMotion
+                      ? {
+                          scale: 1.15,
+                          y: -3,
+                          backgroundColor: 'rgba(155, 135, 245, 0.2)',
+                          borderColor: 'rgba(155, 135, 245, 0.4)',
+                          boxShadow: '0 0 20px rgba(155, 135, 245, 0.25)',
+                        }
+                      : {
+                          backgroundColor: 'rgba(155, 135, 245, 0.25)',
+                          borderColor: 'rgba(155, 135, 245, 0.5)',
+                          boxShadow: '0 0 20px rgba(155, 135, 245, 0.35)',
+                        }
+                  }
                   transition={{
                     type: 'spring',
                     stiffness: 300,
@@ -663,7 +668,7 @@ export default function HeroSection() {
         </motion.div>
 
         {/* =========================================
-            SCROLL INDICATOR (Interactive Pulse & Bounce)
+            SCROLL INDICATOR
         ========================================== */}
 
         <motion.a
@@ -671,18 +676,29 @@ export default function HeroSection() {
           initial={{
             opacity: 0,
           }}
-          animate={{
-            opacity: 1,
-            y: [0, 8, 0],
-          }}
-          transition={{
-            delay: 1.6,
-            repeat: Infinity,
-            duration: 2.2,
-          }}
-          whileHover={{
-            scale: 1.08,
-          }}
+          animate={
+            !reduceMotion
+              ? {
+                  opacity: 1,
+                  y: [0, 8, 0],
+                }
+              : {
+                  opacity: 1,
+                }
+          }
+          transition={
+            !reduceMotion
+              ? {
+                  delay: 1.6,
+                  repeat: Infinity,
+                  duration: 2.2,
+                }
+              : {
+                  delay: 0.8,
+                  duration: 0.6,
+                }
+          }
+          whileHover={!reduceMotion ? { scale: 1.08 } : undefined}
           className="
             mt-12
             lg:mt-16

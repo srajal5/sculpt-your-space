@@ -7,6 +7,7 @@ import {
   useTransform,
   type Variants,
 } from 'framer-motion';
+import { useReducedMotionPreference } from '@/hooks/useReducedMotionPreference';
 import { setCursorState } from '@/lib/cursor';
 
 interface Particle {
@@ -20,7 +21,7 @@ interface Particle {
   alpha: number;
 }
 
-const letterVariants: Variants = {
+const letterVariantsNormal: Variants = {
   hidden: {
     opacity: 0,
     y: 35,
@@ -41,13 +42,26 @@ const letterVariants: Variants = {
   },
 };
 
+const letterVariantsReduced: Variants = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.35,
+      ease: 'easeOut',
+    },
+  },
+};
+
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.055,
-      delayChildren: 0.15,
+      staggerChildren: 0.045,
+      delayChildren: 0.1,
     },
   },
 };
@@ -139,6 +153,8 @@ export default function CursorReactiveText({
     ]
   );
 
+  const reduceMotion = useReducedMotionPreference();
+
   // Reset letters to baseline transform
   const resetLetters = useCallback(() => {
     letterInnerRefs.current.forEach((el) => {
@@ -148,13 +164,14 @@ export default function CursorReactiveText({
     });
   }, []);
 
-  // Calculate proximity and displacement for individual letters
+  // Calculate proximity and displacement/glow for individual letters
   const updateLetterProximity = useCallback((cursorPx: number, cursorPy: number, proxIntensity: number) => {
     if (proxIntensity <= 0.02) {
       resetLetters();
       return;
     }
 
+    const isReduced = reducedMotionRef.current;
     const vel = velocityRef.current;
     const velBoost = Math.min(1.5, 1 + vel * 0.3);
 
@@ -172,16 +189,19 @@ export default function CursorReactiveText({
       const influence = Math.max(0, 1 - dist / maxDist) * proxIntensity;
 
       if (influence > 0) {
-        const ty = -5 * influence * velBoost;
-        const tx = (letterCenterX - cursorPx > 0 ? 1.5 : -1.5) * influence;
-        const tz = 8 * influence;
-        const scale = 1 + 0.035 * influence;
         const glowBlur = 12 + 16 * influence;
-
-        el.style.transform = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, ${tz.toFixed(1)}px) scale(${scale.toFixed(3)})`;
+        if (!isReduced) {
+          const ty = -5 * influence * velBoost;
+          const tx = (letterCenterX - cursorPx > 0 ? 1.5 : -1.5) * influence;
+          const tz = 8 * influence;
+          const scale = 1 + 0.035 * influence;
+          el.style.transform = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, ${tz.toFixed(1)}px) scale(${scale.toFixed(3)})`;
+        } else {
+          el.style.transform = 'none';
+        }
         el.style.filter = `drop-shadow(0 0 ${glowBlur.toFixed(1)}px rgba(34, 211, 238, ${(0.4 + 0.5 * influence).toFixed(2)})) drop-shadow(0 0 20px rgba(139, 92, 246, 0.4))`;
       } else {
-        el.style.transform = 'translate3d(0, 0, 0) scale(1)';
+        el.style.transform = isReduced ? 'none' : 'translate3d(0, 0, 0) scale(1)';
         el.style.filter = 'drop-shadow(0 0 18px rgba(139,92,246,0.35))';
       }
     });
@@ -190,7 +210,7 @@ export default function CursorReactiveText({
   // Main animation tick loop
   const tick = useCallback(() => {
     const wrapper = wrapperRef.current;
-    if (!wrapper || reducedMotionRef.current || !interactiveRef.current) {
+    if (!wrapper || !interactiveRef.current) {
       rafRef.current = null;
       return;
     }
@@ -342,15 +362,25 @@ export default function CursorReactiveText({
       proximityRef.current = nextProximity;
       proximity.set(nextProximity);
 
-      // Micro 3D responsive tilts & magnetic pull: rotateX ±2deg, rotateY ±2deg, translateX ±3px, translateY ±3px, scale 1.018
-      rotateX.set((0.5 - ny) * 4 * intensityRef.current);
-      rotateY.set((nx - 0.5) * 4 * intensityRef.current);
-      translateX.set((nx - 0.5) * 6 * intensityRef.current);
-      translateY.set((ny - 0.5) * 6 * intensityRef.current);
-      titleScale.set(1 + 0.018 * nextProximity * intensityRef.current);
+      if (!reducedMotionRef.current) {
+        // Micro 3D responsive tilts & magnetic pull
+        rotateX.set((0.5 - ny) * 4 * intensityRef.current);
+        rotateY.set((nx - 0.5) * 4 * intensityRef.current);
+        translateX.set((nx - 0.5) * 6 * intensityRef.current);
+        translateY.set((ny - 0.5) * 6 * intensityRef.current);
+        titleScale.set(1 + 0.018 * nextProximity * intensityRef.current);
+        auraX.set((nx - 0.5) * 32);
+        auraY.set((ny - 0.5) * 22);
+      } else {
+        rotateX.set(0);
+        rotateY.set(0);
+        translateX.set(0);
+        translateY.set(0);
+        titleScale.set(1);
+        auraX.set(0);
+        auraY.set(0);
+      }
 
-      auraX.set((nx - 0.5) * 32);
-      auraY.set((ny - 0.5) * 22);
       startLoop();
     },
     [auraX, auraY, intensityRef, proximity, resetLetters, rotateX, rotateY, startLoop, titleScale, translateX, translateY]
@@ -361,13 +391,11 @@ export default function CursorReactiveText({
     const pointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
 
     const syncCapabilities = () => {
-      const isReduced = import.meta.env.PROD ? motionQuery.matches : false;
-      reducedMotionRef.current = isReduced || !pointerQuery.matches;
-      interactiveRef.current = !reducedMotionRef.current;
+      const isReduced = motionQuery.matches;
+      reducedMotionRef.current = isReduced;
+      interactiveRef.current = pointerQuery.matches;
       intensityRef.current = window.innerWidth < 1024 ? 0.6 : 1;
       if (reducedMotionRef.current) {
-        resetLetters();
-        proximity.set(0);
         rotateX.set(0);
         rotateY.set(0);
         translateX.set(0);
@@ -526,7 +554,7 @@ export default function CursorReactiveText({
             {characters.map((char, index) => (
               <motion.span
                 key={`${char}-${index}`}
-                variants={letterVariants}
+                variants={reduceMotion ? letterVariantsReduced : letterVariantsNormal}
                 className="letter-shell inline-block"
                 style={{ transformOrigin: 'bottom center' }}
               >

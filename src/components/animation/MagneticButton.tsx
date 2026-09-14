@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useSpring } from 'framer-motion';
+import { useReducedMotionPreference } from '@/hooks/useReducedMotionPreference';
 
 interface MagneticButtonProps {
   children: React.ReactNode;
@@ -15,13 +16,14 @@ export default function MagneticButton({
   onClick,
 }: MagneticButtonProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotionPreference();
 
   const springConfig = { stiffness: 150, damping: 15, mass: 0.1 };
   const positionX = useSpring(0, springConfig);
   const positionY = useSpring(0, springConfig);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
+    if (reduceMotion || !ref.current) return;
     const { left, top, width, height } = ref.current.getBoundingClientRect();
     const centerX = left + width / 2;
     const centerY = top + height / 2;
@@ -34,6 +36,7 @@ export default function MagneticButton({
   };
 
   const handleMouseLeave = () => {
+    if (reduceMotion) return;
     positionX.set(0);
     positionY.set(0);
   };
@@ -45,8 +48,8 @@ export default function MagneticButton({
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
       style={{
-        x: positionX,
-        y: positionY,
+        x: reduceMotion ? 0 : positionX,
+        y: reduceMotion ? 0 : positionY,
       }}
       className={`inline-block ${className}`}
     >
