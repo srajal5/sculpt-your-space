@@ -68,14 +68,14 @@ export default function ContactSection() {
     e.preventDefault();
     setLoading(true);
 
-    // Save message locally first so no data is lost
+
     saveMessage(formData);
 
     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || '';
     const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '';
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '';
 
-    // Graceful fallback if EmailJS variables are unconfigured
+
     const isUnconfigured = !serviceId || serviceId.includes('your_') ||
       !templateId || templateId.includes('your_') ||
       !publicKey || publicKey.includes('your_');
@@ -104,7 +104,7 @@ export default function ContactSection() {
       return;
     }
 
-    // Dispatch via real EmailJS client
+
     try {
       const templateParams = {
         from_name: formData.name,
@@ -126,7 +126,7 @@ export default function ContactSection() {
       setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (error) {
       console.warn('EmailJS Send Warning (400 Bad Request / Unconfigured credentials):', error);
-      
+
       // Fallback to mailto link & local storage confirmation so user message is never lost
       const mailtoLink = createMailtoLink(formData);
       window.location.href = mailtoLink;
