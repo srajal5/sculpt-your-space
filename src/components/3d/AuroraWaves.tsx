@@ -2,18 +2,12 @@ import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-/**
- * AuroraWaves — Animated undulating ribbon meshes that simulate
- * aurora borealis / northern lights in the background. Creates
- * a beautiful animated wave of color that shifts over time.
- * Optimized to prevent frame drops during page scrolling.
- */
+
 export default function AuroraWaves() {
   const meshRef = useRef<THREE.Mesh>(null);
   const mesh2Ref = useRef<THREE.Mesh>(null);
 
-  // Reduced segments from 80x20 to 24x8 to decrease vertex count from ~1700 to ~225.
-  // This reduces loop iterations by over 85% while keeping the visual waves smooth.
+
   const { geometry, geometry2 } = useMemo(() => {
     const width = 30;
     const height = 8;
@@ -27,7 +21,7 @@ export default function AuroraWaves() {
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
 
-    // Animate primary aurora wave
+
     if (meshRef.current) {
       const positions = meshRef.current.geometry.attributes.position;
       for (let i = 0; i < positions.count; i++) {
@@ -40,12 +34,10 @@ export default function AuroraWaves() {
         positions.setZ(i, waveZ);
       }
       positions.needsUpdate = true;
-      // Removed computeVertexNormals() here. This is a CPU-side calculation
-      // that recalculates face and vertex normals, but is unused by an emissive,
-      // additive-blended transparent material. Removing it saves huge CPU overhead.
+
     }
 
-    // Animate secondary aurora wave (offset)
+
     if (mesh2Ref.current) {
       const positions = mesh2Ref.current.geometry.attributes.position;
       for (let i = 0; i < positions.count; i++) {
@@ -57,7 +49,7 @@ export default function AuroraWaves() {
         positions.setZ(i, waveZ);
       }
       positions.needsUpdate = true;
-      // Removed computeVertexNormals() here as well.
+
     }
   });
 
