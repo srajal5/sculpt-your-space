@@ -7,6 +7,7 @@ import AuroraWaves from './3d/AuroraWaves';
 import WireframeGrid from './3d/WireframeGrid';
 import HeroCenterpiece from './3d/HeroCenterpiece';
 import LightTrails from './3d/LightTrails';
+import { usePerformance } from '@/context/PerformanceContext';
 
 /**
  * SmoothCameraController — Follows the mouse with gentle parallax
@@ -107,16 +108,27 @@ function SceneLighting() {
 }
 
 export default function Scene() {
+  const { isHigh, isLow, isOff } = usePerformance();
+
+  if (isOff) {
+    return (
+      <div className="canvas-container bg-[#06050a] pointer-events-none -z-20 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.18),rgba(255,255,255,0))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_80%_80%,rgba(14,165,233,0.1),rgba(255,255,255,0))]" />
+      </div>
+    );
+  }
+
   return (
     <div className="canvas-container">
       <Canvas
         gl={{
-          antialias: true,
+          antialias: isHigh,
           alpha: false,
-          powerPreference: 'high-performance',
+          powerPreference: isHigh ? 'high-performance' : 'default',
         }}
         camera={{ fov: 60, near: 0.1, far: 100, position: [0, 0, 7] }}
-        dpr={[1, 1.5]}
+        dpr={isLow ? [1, 1] : [1, 1.5]}
         onCreated={({ gl }) => {
           gl.toneMapping = THREE.ACESFilmicToneMapping;
           gl.toneMappingExposure = 1.2;
@@ -134,10 +146,10 @@ export default function Scene() {
 
           {/* Custom 3D models */}
           <HeroCenterpiece />
-          <FloatingCrystals />
+          {!isLow && <FloatingCrystals />}
 
           {/* Dynamic effects */}
-          <LightTrails />
+          {!isLow && <LightTrails />}
           <WireframeGrid />
         </Suspense>
       </Canvas>

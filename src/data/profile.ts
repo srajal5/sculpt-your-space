@@ -13,6 +13,12 @@ export interface ProfileData {
   tagline: string;
   heroLead: string;
   bio: string;
+  resumeUrl: string;
+  proofMetrics: Array<{
+    stat: string;
+    label: string;
+    detail: string;
+  }>;
   socials: {
     github: string;
     linkedin: string;
@@ -38,7 +44,29 @@ export const PROFILE_DATA: ProfileData = {
   heroLead:
     'Building intelligent AI-powered applications and scalable full-stack systems with',
   bio: 'MCA student specializing in Artificial Intelligence, Generative AI, and Full Stack AI Engineering, with hands-on experience building AI-powered applications and workflows using Python, FastAPI, React.js, MongoDB, and LLM APIs. Experienced in scalable AI systems, REST APIs, real-time applications, and LLM-powered automation.',
-
+  resumeUrl: '/resume.pdf',
+  proofMetrics: [
+    {
+      stat: '5,400+',
+      label: 'Records Ingested',
+      detail: 'Multi-source async pipeline with entity resolution & deduplication',
+    },
+    {
+      stat: '363/363',
+      label: 'Tests Passing',
+      detail: '100% test coverage with zero duplicates & zero SAST vulnerabilities',
+    },
+    {
+      stat: '800+',
+      label: 'Users Supported',
+      detail: 'Production applications engineered with React.js & optimized REST APIs',
+    },
+    {
+      stat: '30%',
+      label: 'Mobile UI Gain',
+      detail: 'Measurable responsiveness and usability improvement delivered in production',
+    },
+  ],
   socials: {
     github: 'https://github.com/srajal5',
     linkedin: 'https://www.linkedin.com/in/srajalpuri',
@@ -46,3 +74,4 @@ export const PROFILE_DATA: ProfileData = {
     email: 'mailto:Srajalpuri55@gmail.com',
   },
 };
+

@@ -8,6 +8,7 @@ import RoleSwitcher from '@/components/animation/RoleSwitcher';
 import KineticHeroStatement from '@/components/animation/KineticHeroStatement';
 import Profile3DCard from '@/components/profile/Profile3DCard';
 import { PROFILE_DATA } from '@/data/profile';
+import RecruiterProofStrip from '@/components/hero/RecruiterProofStrip';
 import {
   ArrowRight,
   Github,
@@ -16,6 +17,7 @@ import {
   Mail,
   Sparkles,
   ArrowDown,
+  FileText,
 } from 'lucide-react';
 import { setCursorState } from '@/lib/cursor';
 
@@ -203,43 +205,9 @@ export default function HeroSection() {
       />
 
       {/* =========================================
-          FLOATING DECORATIVE MICRO-UI
-      ========================================== */}
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute top-32 right-10 hidden xl:flex flex-col gap-2 font-mono text-[10px] text-white/40 select-none z-0"
-        animate={
-          !reduceMotion
-            ? { y: [0, -6, 0] }
-            : { opacity: [0.75, 1, 0.75] }
-        }
-        transition={{ duration: !reduceMotion ? 7 : 5, repeat: Infinity, ease: 'easeInOut' }}
-      >
-        <div className="flex items-center gap-2 px-2.5 py-1 rounded-md border border-white/10 bg-white/5 backdrop-blur-md shadow-sm">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-neon-cyan font-semibold">SYS_STATE //</span>
-          <span className="text-emerald-400 font-bold">ONLINE</span>
-        </div>
-        <div className="flex items-center gap-2 px-2.5 py-1 rounded-md border border-white/10 bg-white/5 backdrop-blur-md shadow-sm">
-          <span className="text-neon-purple font-semibold">EDUCATION //</span>
-          <span className="text-slate-300">MCA ({PROFILE_DATA.cgpa} CGPA)</span>
-        </div>
-      </motion.div>
-
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute top-44 left-8 hidden 2xl:flex items-center gap-2 font-mono text-[9px] text-neon-blue/50 uppercase tracking-widest z-0"
-        animate={{ opacity: [0.4, 0.8, 0.4] }}
-        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-      >
-        <span className="w-2 h-2 border-t border-l border-neon-blue/60" />
-        <span>AI ENGINE // Dr. D. Y. Patil SST · Pune</span>
-      </motion.div>
-
-      {/* =========================================
           MAIN HERO CONTAINER
       ========================================== */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 z-10 relative">
+      <div className="w-full max-w-[1440px] mx-auto px-5 sm:px-6 lg:px-8 xl:px-10 z-10 relative">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -264,56 +232,11 @@ export default function HeroSection() {
             }}
             className="lg:col-span-7 flex flex-col justify-center text-left"
           >
-            {/* =====================================
-                EYEBROW (0.1s entrance)
-            ====================================== */}
-
-            <motion.div
-              variants={leftItemVariants}
-              className="mb-5"
-            >
-              <motion.span
-                whileHover={{
-                  boxShadow: '0 0 28px rgba(14,165,233,0.28)',
-                  borderColor: 'rgba(14,165,233,0.45)',
-                }}
-                className="
-                  inline-flex
-                  items-center
-                  gap-2
-                  px-4
-                  py-1.5
-                  text-xs
-                  font-mono
-                  font-bold
-                  tracking-[0.18em]
-                  text-neon-blue
-                  uppercase
-                  bg-neon-blue/10
-                  border
-                  border-neon-blue/20
-                  rounded-full
-                  shadow-[0_0_20px_rgba(14,165,233,0.15)]
-                  backdrop-blur-sm
-                "
-              >
-                <motion.span
-                  whileHover={{ rotate: 18, scale: 1.12 }}
-                  transition={{ type: 'spring', stiffness: 280, damping: 16 }}
-                  className="inline-flex"
-                >
-                  <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-                </motion.span>
-
-                {PROFILE_DATA.eyebrow}
-              </motion.span>
-            </motion.div>
-
             {/* Title: Srajal Puri with Cursor Spotlight & Two-Layer System */}
             <CursorReactiveText text={PROFILE_DATA.name} />
 
             {/* Rotating Professional Role Switcher */}
-            <motion.div variants={leftItemVariants}>
+            <motion.div variants={leftItemVariants} className="mb-2">
               <RoleSwitcher />
             </motion.div>
 
@@ -321,111 +244,27 @@ export default function HeroSection() {
             <KineticHeroStatement />
 
             {/* =====================================
-                DESCRIPTION / TAGLINE (With Local Readability Glow)
+                SUPPORTING PROFESSIONAL NARRATIVE
             ====================================== */}
-
             <motion.div
               variants={leftItemVariants}
               className="relative max-w-2xl mb-8"
             >
-              {/* Local Readability Dark Radial Glow */}
-              <div
-                aria-hidden="true"
-                className="
-                  absolute
-                  -inset-4
-                  rounded-2xl
-                  bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.50),transparent_70%)]
-                  blur-2xl
-                  pointer-events-none
-                  -z-10
-                "
-              />
-
               <p
                 className="
                   text-base
                   sm:text-lg
-                  text-foreground/75
+                  text-foreground/85
                   leading-relaxed
                   font-normal
                   transition-colors
                   duration-300
                 "
               >
-                MCA student specializing in{' '}
-                <motion.span
-                  whileHover={!reduceMotion ? { y: -1, scale: 1.015 } : undefined}
-                  className="inline-block text-neon-purple font-medium cursor-default transition-all duration-200 hover:drop-shadow-[0_0_8px_rgba(155,135,245,0.8)]"
-                  onMouseEnter={() => setCursorState('hover')}
-                  onMouseLeave={() => setCursorState('default')}
-                >
-                  Artificial Intelligence
-                </motion.span>
-                ,{' '}
-                <motion.span
-                  whileHover={!reduceMotion ? { y: -1, scale: 1.015 } : undefined}
-                  className="inline-block text-neon-purple font-medium cursor-default transition-all duration-200 hover:drop-shadow-[0_0_8px_rgba(155,135,245,0.8)]"
-                  onMouseEnter={() => setCursorState('hover')}
-                  onMouseLeave={() => setCursorState('default')}
-                >
-                  Generative AI
-                </motion.span>
-                , and{' '}
-                <motion.span
-                  whileHover={!reduceMotion ? { y: -1, scale: 1.015 } : undefined}
-                  className="inline-block text-white/95 font-medium cursor-default transition-all duration-200 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]"
-                  onMouseEnter={() => setCursorState('hover')}
-                  onMouseLeave={() => setCursorState('default')}
-                >
-                  Full Stack AI Engineering
-                </motion.span>{' '}
-                — building AI-powered applications and workflows with{' '}
-                <motion.span
-                  whileHover={!reduceMotion ? { y: -1, scale: 1.015 } : undefined}
-                  className="inline-block text-neon-blue font-medium cursor-default transition-all duration-200 hover:drop-shadow-[0_0_8px_rgba(14,165,233,0.8)]"
-                  onMouseEnter={() => setCursorState('hover')}
-                  onMouseLeave={() => setCursorState('default')}
-                >
-                  Python
-                </motion.span>
-                ,{' '}
-                <motion.span
-                  whileHover={!reduceMotion ? { y: -1, scale: 1.015 } : undefined}
-                  className="inline-block text-emerald-400 font-medium cursor-default transition-all duration-200 hover:drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]"
-                  onMouseEnter={() => setCursorState('hover')}
-                  onMouseLeave={() => setCursorState('default')}
-                >
-                  FastAPI
-                </motion.span>
-                ,{' '}
-                <motion.span
-                  whileHover={!reduceMotion ? { y: -1, scale: 1.015 } : undefined}
-                  className="inline-block text-cyan-400 font-medium cursor-default transition-all duration-200 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]"
-                  onMouseEnter={() => setCursorState('hover')}
-                  onMouseLeave={() => setCursorState('default')}
-                >
-                  React.js
-                </motion.span>
-                ,{' '}
-                <motion.span
-                  whileHover={!reduceMotion ? { y: -1, scale: 1.015 } : undefined}
-                  className="inline-block text-purple-300 font-medium cursor-default transition-all duration-200 hover:drop-shadow-[0_0_8px_rgba(216,180,254,0.8)]"
-                  onMouseEnter={() => setCursorState('hover')}
-                  onMouseLeave={() => setCursorState('default')}
-                >
-                  MongoDB
-                </motion.span>
-                , and{' '}
-                <motion.span
-                  whileHover={!reduceMotion ? { y: -1, scale: 1.015 } : undefined}
-                  className="inline-block text-neon-pink font-medium cursor-default transition-all duration-200 hover:drop-shadow-[0_0_8px_rgba(217,70,239,0.8)]"
-                  onMouseEnter={() => setCursorState('hover')}
-                  onMouseLeave={() => setCursorState('default')}
-                >
-                  LLM APIs
-                </motion.span>
-                .
+                Currently pursuing my MCA with a focus on{' '}
+                <span className="text-white font-medium">Artificial Intelligence</span>,{' '}
+                <span className="text-neon-purple font-medium">Generative AI</span>, and{' '}
+                <span className="text-neon-cyan font-medium">production-oriented software engineering</span>.
               </p>
             </motion.div>
 
@@ -457,7 +296,7 @@ export default function HeroSection() {
                     text-white
                     border-0
                     font-bold
-                    px-8
+                    px-7
                     py-6
                     rounded-xl
                     shadow-[0_0_25px_rgba(155,135,245,0.35)]
@@ -493,6 +332,60 @@ export default function HeroSection() {
                 </Button>
               </MagneticButton>
 
+              {/* Resume Download CTA */}
+              <MagneticButton magneticStrength={0.25}>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="
+                    border-neon-cyan/40
+                    bg-neon-cyan/10
+                    backdrop-blur-md
+                    text-foreground
+                    hover:bg-neon-cyan/20
+                    hover:border-neon-cyan
+                    px-7
+                    py-6
+                    rounded-xl
+                    transition-all
+                    duration-300
+                    shadow-[0_0_20px_rgba(34,211,238,0.15)]
+                    hover:shadow-[0_0_30px_rgba(34,211,238,0.3)]
+                  "
+                  asChild
+                  onMouseEnter={() =>
+                    setCursorState('hover', 'RESUME')
+                  }
+                  onMouseLeave={() =>
+                    setCursorState('default')
+                  }
+                >
+                  <a
+                    href={PROFILE_DATA.resumeUrl}
+                    download="Srajal_Puri_Resume.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="
+                      flex
+                      items-center
+                      gap-2
+                      text-base
+                      font-semibold
+                    "
+                  >
+                    Download Resume
+
+                    <FileText
+                      className="
+                        h-4
+                        w-4
+                        text-neon-cyan
+                      "
+                    />
+                  </a>
+                </Button>
+              </MagneticButton>
+
               {/* Secondary CTA */}
               <MagneticButton magneticStrength={0.25}>
                 <Button
@@ -504,7 +397,7 @@ export default function HeroSection() {
                     backdrop-blur-md
                     text-foreground
                     hover:bg-white/15
-                    px-8
+                    px-7
                     py-6
                     rounded-xl
                     transition-all
@@ -666,6 +559,11 @@ export default function HeroSection() {
             <Profile3DCard />
           </motion.div>
         </motion.div>
+
+        {/* =========================================
+            RECRUITER PROOF STRIP (VERIFIED METRICS)
+        ========================================== */}
+        <RecruiterProofStrip />
 
         {/* =========================================
             SCROLL INDICATOR

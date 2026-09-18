@@ -1,3 +1,4 @@
+import intelliforgeImg from '@/Imagecomponents/intelliforge-preview.png';
 import nutritrackImg from '@/Imagecomponents/Screenshot 2026-09-05 203535.png';
 import sentinelImg from '@/Imagecomponents/Screenshot 2026-08-27 153000.png';
 import filehubImg from '@/Imagecomponents/image.png';
@@ -19,19 +20,92 @@ export interface Project {
   challenges: string;
   results: string;
   image: string;
-  demoUrl: string;
-  codeUrl: string;
+  demoUrl?: string;
+  codeUrl?: string;
   featured?: boolean;
 }
 
 export const PROJECTS_DATA: Project[] = [
-
-
+  {
+    id: 'intelliforge',
+    number: '01',
+    title: 'IntelliForge',
+    subtitle: 'High-Throughput AI Intelligence Pipeline',
+    category: 'AI Engineering',
+    year: '2026',
+    shortDescription:
+      'Async AI intelligence pipeline ingesting research, startups, products, news, and jobs from multiple sources with entity resolution, deduplication, and OpenRouter LLM orchestration.',
+    fullDescription:
+      'Built an async AI intelligence pipeline ingesting research, startups, products, news, and jobs from multiple sources. Features entity resolution, deduplication, checkpointing, retries, rate limiting, 24-hour freshness validation, and OpenRouter LLM orchestration with structured validation, chunking, fallback handling, secure credential redaction, and Google Sheets export.',
+    problem:
+      'Aggregating and validating intelligence from fragmented sources at scale requires robust deduplication, freshness checks, and reliable LLM orchestration without data loss or security exposure.',
+    solution:
+      'Engineered an async Python pipeline with AsyncIO, MongoDB persistence, checkpointing, retries, and rate limiting — orchestrating OpenRouter LLMs with structured validation, chunking, fallback handling, and secure credential redaction.',
+    keyFeatures: [
+      'Entity resolution and deduplication across 5,400+ records',
+      'Checkpointing, retries, and rate limiting for resilient ingestion',
+      '24-hour freshness validation pipeline',
+      'OpenRouter LLM orchestration with structured validation and chunking',
+      'Fallback handling and secure credential redaction',
+      'Google Sheets export integration',
+    ],
+    technologies: ['Python', 'AsyncIO', 'MongoDB', 'OpenRouter', 'REST APIs'],
+    architecture:
+      'Async Python ingestion pipeline with MongoDB storage, checkpoint-based recovery, rate-limited API calls, OpenRouter LLM orchestration layer, and structured validation before export.',
+    challenges:
+      'Ensuring zero duplicates and zero invalid records across high-volume multi-source ingestion while maintaining 24-hour freshness and secure credential handling.',
+    results:
+      '363/363 tests passed with 0 duplicates, 0 invalid records, and 0 SAST vulnerabilities across 5,400+ records.',
+    image: intelliforgeImg,
+    codeUrl: 'https://github.com/srajal5/IntelliForge',
+    featured: true,
+  },
+  {
+    id: 'sentinel-ai',
+    number: '02',
+    title: 'Sentinel AI',
+    subtitle: 'Real-Time CCTV Incident Detection Platform',
+    category: 'Computer Vision',
+    year: '2025',
+    shortDescription:
+      'AI-powered surveillance platform for real-time road accident and violence detection from CCTV feeds using YOLOv8, OpenCV, FastAPI, and MongoDB.',
+    fullDescription:
+      'AI-powered surveillance platform for real-time road accident and violence detection from CCTV feeds. Built with YOLOv8 object detection, OpenCV processing pipeline, FastAPI backend, MongoDB incident management, analytics, automated emergency alerts, live monitoring dashboard, real-time incident visualization, and response coordination.',
+    problem:
+      'CCTV surveillance systems generate continuous feeds but lack real-time intelligent detection for critical incidents like road accidents and violence, delaying emergency response.',
+    solution:
+      'Built a full-stack AI platform combining YOLOv8 object detection with an OpenCV processing pipeline for low-latency incident recognition, backed by a FastAPI server and MongoDB for incident management and analytics.',
+    keyFeatures: [
+      'YOLOv8 object detection with OpenCV processing pipeline',
+      'Low-latency incident recognition for accidents and violence',
+      'FastAPI backend with MongoDB incident management',
+      'Analytics and automated emergency alerts',
+      'Live monitoring dashboard with real-time incident visualization',
+      'Response coordination workflows',
+    ],
+    technologies: [
+      'React.js',
+      'FastAPI',
+      'MongoDB',
+      'YOLOv8',
+      'OpenCV',
+      'Tailwind CSS',
+    ],
+    architecture:
+      'React.js frontend dashboard connected to a FastAPI backend processing CCTV streams through YOLOv8 and OpenCV, with MongoDB for incident storage, analytics, and alert coordination.',
+    challenges:
+      'Achieving low-latency real-time detection and visualization across live CCTV feeds while maintaining reliable incident logging and emergency alert delivery.',
+    results:
+      'Delivered a real-time surveillance platform with automated incident detection, live dashboard visualization, and emergency alert coordination.',
+    image: sentinelImg,
+    codeUrl: 'https://github.com/srajal5',
+    featured: true,
+  },
   {
     id: 'nutritrack-ai',
-    number: '01',
+    number: '03',
     title: 'NutriTrackAI',
-    subtitle: 'AI-Powered Nutrition & Fitness Coach',
+    subtitle: 'Conversational Nutrition & Fitness Intelligence',
     category: 'AI Engineering',
     year: '2026',
     shortDescription:
@@ -73,57 +147,15 @@ export const PROJECTS_DATA: Project[] = [
     results:
       'Delivered a production-oriented AI nutrition platform with natural-language food tracking, personalized AI coaching, persistent nutrition data, interactive progress analytics, and a unified React + Express architecture.',
     image: nutritrackImg,
-
     demoUrl: 'https://nutritrack-eight.vercel.app/',
     codeUrl: 'https://github.com/srajal5/Nutritrack',
-    featured: true,
-  }, {
-    id: 'sentinel-ai',
-    number: '02',
-    title: 'Sentinel AI',
-    subtitle: 'AI-Powered Surveillance Platform',
-    category: 'Computer Vision',
-    year: '2025',
-    shortDescription:
-      'AI-powered surveillance platform for real-time road accident and violence detection from CCTV feeds using YOLOv8, OpenCV, FastAPI, and MongoDB.',
-    fullDescription:
-      'AI-powered surveillance platform for real-time road accident and violence detection from CCTV feeds. Built with YOLOv8 object detection, OpenCV processing pipeline, FastAPI backend, MongoDB incident management, analytics, automated emergency alerts, live monitoring dashboard, real-time incident visualization, and response coordination.',
-    problem:
-      'CCTV surveillance systems generate continuous feeds but lack real-time intelligent detection for critical incidents like road accidents and violence, delaying emergency response.',
-    solution:
-      'Built a full-stack AI platform combining YOLOv8 object detection with an OpenCV processing pipeline for low-latency incident recognition, backed by a FastAPI server and MongoDB for incident management and analytics.',
-    keyFeatures: [
-      'YOLOv8 object detection with OpenCV processing pipeline',
-      'Low-latency incident recognition for accidents and violence',
-      'FastAPI backend with MongoDB incident management',
-      'Analytics and automated emergency alerts',
-      'Live monitoring dashboard with real-time incident visualization',
-      'Response coordination workflows',
-    ],
-    technologies: [
-      'React.js',
-      'FastAPI',
-      'MongoDB',
-      'YOLOv8',
-      'OpenCV',
-      'Tailwind CSS',
-    ],
-    architecture:
-      'React.js frontend dashboard connected to a FastAPI backend processing CCTV streams through YOLOv8 and OpenCV, with MongoDB for incident storage, analytics, and alert coordination.',
-    challenges:
-      'Achieving low-latency real-time detection and visualization across live CCTV feeds while maintaining reliable incident logging and emergency alert delivery.',
-    results:
-      'Delivered a real-time surveillance platform with automated incident detection, live dashboard visualization, and emergency alert coordination.',
-    image: sentinelImg,
-    demoUrl: '#',
-    codeUrl: 'https://github.com/srajal5',
     featured: true,
   },
   {
     id: 'filehub',
-    number: '03',
+    number: '04',
     title: 'FileHub',
-    subtitle: 'Secure File Sharing Platform',
+    subtitle: 'Secure Enterprise File Sharing Platform',
     category: 'Full-Stack Engineering',
     year: '2026',
     shortDescription:
@@ -172,41 +204,5 @@ export const PROJECTS_DATA: Project[] = [
     demoUrl: 'https://filesharing-pi.vercel.app/',
     codeUrl: 'https://github.com/srajal5/Sharehub',
     featured: false,
-  },
-  {
-    id: 'intelliforge',
-    number: '04',
-    title: 'IntelliForge',
-    subtitle: 'AI Intelligence Pipeline',
-    category: 'AI Engineering',
-    year: '2026',
-    shortDescription:
-      'Async AI intelligence pipeline ingesting research, startups, products, news, and jobs from multiple sources with entity resolution, deduplication, and OpenRouter LLM orchestration.',
-    fullDescription:
-      'Built an async AI intelligence pipeline ingesting research, startups, products, news, and jobs from multiple sources. Features entity resolution, deduplication, checkpointing, retries, rate limiting, 24-hour freshness validation, and OpenRouter LLM orchestration with structured validation, chunking, fallback handling, secure credential redaction, and Google Sheets export.',
-    problem:
-      'Aggregating and validating intelligence from fragmented sources at scale requires robust deduplication, freshness checks, and reliable LLM orchestration without data loss or security exposure.',
-    solution:
-      'Engineered an async Python pipeline with AsyncIO, MongoDB persistence, checkpointing, retries, and rate limiting — orchestrating OpenRouter LLMs with structured validation, chunking, fallback handling, and secure credential redaction.',
-    keyFeatures: [
-      'Entity resolution and deduplication across 5,400+ records',
-      'Checkpointing, retries, and rate limiting for resilient ingestion',
-      '24-hour freshness validation pipeline',
-      'OpenRouter LLM orchestration with structured validation and chunking',
-      'Fallback handling and secure credential redaction',
-      'Google Sheets export integration',
-    ],
-    technologies: ['Python', 'AsyncIO', 'MongoDB', 'OpenRouter'],
-    architecture:
-      'Async Python ingestion pipeline with MongoDB storage, checkpoint-based recovery, rate-limited API calls, OpenRouter LLM orchestration layer, and structured validation before export.',
-    challenges:
-      'Ensuring zero duplicates and zero invalid records across high-volume multi-source ingestion while maintaining 24-hour freshness and secure credential handling.',
-    results:
-      '363/363 tests passed with 0 duplicates, 0 invalid records, and 0 SAST vulnerabilities across 5,400+ records.',
-    image:
-      'https://images.unsplash.com/photo-1677440866019-21743ec58850?auto=format&fit=crop&q=80&w=1000',
-    demoUrl: '#',
-    codeUrl: 'https://github.com/srajal5/IntelliForge',
-    featured: true,
   },
 ];

@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sparkles } from 'lucide-react';
+import { Menu, X, Sparkles, FileText, Cpu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import MagneticButton from '@/components/animation/MagneticButton';
 import { setCursorState } from '@/lib/cursor';
+import { PROFILE_DATA } from '@/data/profile';
+import { usePerformance } from '@/context/PerformanceContext';
 
 export default function Navbar() {
+  const { mode, cycleMode, isHigh, isLow } = usePerformance();
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -84,20 +87,22 @@ export default function Navbar() {
             : 'py-6 bg-transparent'
         }`}
       >
-        <div className="container mx-auto px-4 flex items-center justify-between">
-          {/* Logo Branding */}
-          <a
-            href="#home"
-            className="flex items-center gap-2 font-mono text-lg font-black tracking-tight text-foreground hover:text-neon-purple transition-colors"
-            onMouseEnter={() => setCursorState('hover', 'HOME')}
-            onMouseLeave={() => setCursorState('default')}
-          >
-            <Sparkles className="w-5 h-5 text-neon-purple animate-pulse" />
-            <span>SCULPT<span className="text-neon-blue">.SPACE</span></span>
-          </a>
+        <div className="w-full max-w-[1440px] mx-auto px-5 sm:px-6 lg:px-8 flex items-center justify-between">
+          {/* Left Zone: Logo Branding */}
+          <div className="flex items-center">
+            <a
+              href="#home"
+              className="flex items-center gap-2 font-mono text-base sm:text-lg font-black tracking-tight text-foreground hover:text-neon-purple transition-colors shrink-0"
+              onMouseEnter={() => setCursorState('hover', 'HOME')}
+              onMouseLeave={() => setCursorState('default')}
+            >
+              <Sparkles className="w-5 h-5 text-neon-purple animate-pulse" />
+              <span>SCULPT<span className="text-neon-blue">.SPACE</span></span>
+            </a>
+          </div>
 
-          {/* Desktop Nav Items */}
-          <nav className="hidden md:flex items-center gap-1 rounded-full p-1.5 glassmorphism border-white/10 bg-black/40">
+          {/* Center Zone: Desktop Nav Items (visible on lg+) */}
+          <nav className="hidden lg:flex items-center gap-1 rounded-full p-1.5 glassmorphism border-white/10 bg-slate-950/60 backdrop-blur-xl shadow-inner">
             {navLinks.map((link) => {
               const isActive = activeSection === link.id;
               return (
@@ -125,12 +130,74 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Right Action Button */}
-          <div className="hidden md:flex items-center">
+          {/* Right Zone: Action Buttons (visible on lg+) */}
+          <div className="hidden lg:flex items-center gap-2.5 shrink-0">
+            {/* 3D FX Toggle */}
+            <button
+              type="button"
+              onClick={cycleMode}
+              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-semibold border transition-all flex items-center gap-1.5 shadow-sm ${
+                isHigh
+                  ? 'bg-neon-purple/15 text-neon-cyan border-neon-cyan/40 hover:bg-neon-purple/25 shadow-[0_0_12px_rgba(34,211,238,0.2)]'
+                  : isLow
+                  ? 'bg-amber-500/15 text-amber-300 border-amber-500/40 hover:bg-amber-500/25'
+                  : 'bg-white/5 text-muted-foreground border-white/10 hover:bg-white/10'
+              }`}
+              title={`3D FX Mode: ${mode.toUpperCase()} (Click to cycle High/Low/Off)`}
+              onMouseEnter={() => setCursorState('hover', `FX:${mode.toUpperCase()}`)}
+              onMouseLeave={() => setCursorState('default')}
+            >
+              <Cpu className="w-3.5 h-3.5" />
+              <span>FX: {mode.toUpperCase()}</span>
+            </button>
+
+            {/* Resume Button — Proper dark glass UI control */}
+            <MagneticButton magneticStrength={0.25}>
+              <a
+                href={PROFILE_DATA.resumeUrl}
+                download="Srajal_Puri_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  group/res
+                  relative
+                  px-3.5
+                  py-1.5
+                  rounded-xl
+                  text-xs
+                  font-mono
+                  font-semibold
+                  tracking-wider
+                  text-foreground/90
+                  bg-slate-950/60
+                  border
+                  border-white/10
+                  hover:border-neon-cyan/50
+                  hover:bg-slate-900/80
+                  hover:text-white
+                  transition-all
+                  duration-300
+                  flex
+                  items-center
+                  gap-2
+                  shadow-[0_2px_10px_rgba(0,0,0,0.3)]
+                  hover:shadow-[0_0_18px_rgba(34,211,238,0.25)]
+                "
+                onMouseEnter={() => setCursorState('hover', 'RESUME')}
+                onMouseLeave={() => setCursorState('default')}
+              >
+                <span className="p-1 rounded-md bg-white/5 border border-white/10 group-hover/res:border-neon-cyan/30 group-hover/res:bg-neon-cyan/10 transition-colors">
+                  <FileText className="w-3 h-3 text-neon-cyan" />
+                </span>
+                <span>RESUME</span>
+              </a>
+            </MagneticButton>
+
+            {/* Hire Me Primary Action CTA */}
             <MagneticButton magneticStrength={0.3}>
               <Button
                 size="sm"
-                className="bg-gradient-to-r from-neon-purple to-neon-blue text-white border-0 font-semibold px-5 text-xs rounded-full shadow-[0_0_15px_rgba(155,135,245,0.3)] hover:shadow-[0_0_25px_rgba(155,135,245,0.6)]"
+                className="bg-gradient-to-r from-neon-purple to-neon-blue text-white border-0 font-semibold px-5 text-xs rounded-xl shadow-[0_0_15px_rgba(155,135,245,0.3)] hover:shadow-[0_0_25px_rgba(155,135,245,0.6)]"
                 asChild
               >
                 <a href="#contact">HIRE ME</a>
@@ -138,8 +205,15 @@ export default function Navbar() {
             </MagneticButton>
           </div>
 
-          {/* Mobile Menu Toggle Button */}
-          <div className="md:hidden">
+          {/* Mobile & Tablet Menu Toggle Button (visible below lg) */}
+          <div className="lg:hidden flex items-center gap-2">
+            <button
+              type="button"
+              onClick={cycleMode}
+              className="px-2.5 py-1 rounded-xl text-[10px] font-mono border border-white/10 bg-white/5 text-neon-cyan"
+            >
+              FX: {mode.toUpperCase()}
+            </button>
             <Button
               variant="outline"
               size="icon"
@@ -182,7 +256,20 @@ export default function Navbar() {
                   {activeSection === link.id && <Sparkles className="w-4 h-4 text-neon-purple" />}
                 </a>
               ))}
-              <div className="pt-4">
+
+              <div className="pt-3 border-t border-white/10 flex flex-col gap-2.5">
+                <a
+                  href={PROFILE_DATA.resumeUrl}
+                  download="Srajal_Puri_Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-2.5 px-4 rounded-xl text-xs font-mono font-bold border border-neon-cyan/40 bg-neon-cyan/10 text-foreground flex items-center justify-center gap-2 shadow-sm"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <FileText className="w-4 h-4 text-neon-cyan" />
+                  DOWNLOAD RESUME (.PDF)
+                </a>
+
                 <Button
                   className="w-full bg-gradient-to-r from-neon-purple to-neon-blue text-white border-0 font-bold"
                   asChild

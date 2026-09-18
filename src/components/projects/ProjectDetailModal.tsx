@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Project } from '@/data/projects';
-import { X, ExternalLink, Github, CheckCircle2, Cpu, ShieldCheck, Trophy, Layers } from 'lucide-react';
+import { X, ExternalLink, Github, CheckCircle2, Cpu, ShieldCheck, Trophy, Layers, Terminal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface ProjectDetailModalProps {
@@ -10,6 +10,12 @@ interface ProjectDetailModalProps {
 }
 
 export default function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps) {
+  const [hasImageError, setHasImageError] = useState(false);
+
+  useEffect(() => {
+    setHasImageError(false);
+  }, [project]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -87,12 +93,34 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
           </div>
 
           {/* Hero Media Preview */}
-          <div className="relative w-full h-[260px] sm:h-[380px] md:h-[460px] rounded-xl overflow-hidden mb-10 border border-white/10 shadow-2xl group">
-            <img
-              src={project.image}
-              alt={project.title}
-              className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-            />
+          <div className="relative w-full h-[260px] sm:h-[380px] md:h-[460px] rounded-xl overflow-hidden mb-10 border border-white/10 shadow-2xl bg-black/50 group">
+            {project.image && !hasImageError ? (
+              <img
+                src={project.image}
+                alt={project.title}
+                onError={() => setHasImageError(true)}
+                className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+              />
+            ) : (
+              <div className="w-full h-full flex flex-col justify-between p-8 bg-gradient-to-br from-slate-950 via-purple-950/20 to-black">
+                <div className="flex items-center justify-between font-mono text-xs text-neon-cyan/80">
+                  <span className="flex items-center gap-2">
+                    <Terminal className="w-4 h-4 text-neon-purple" /> TELEMETRY // {project.id.toUpperCase()}
+                  </span>
+                  <span className="text-emerald-400">ENGINEERING SPECIFICATION</span>
+                </div>
+                <div className="my-auto space-y-2">
+                  <div className="text-2xl font-bold font-mono text-white flex items-center gap-3">
+                    <Cpu className="w-6 h-6 text-neon-purple" /> {project.title}
+                  </div>
+                  <p className="font-mono text-sm text-muted-foreground max-w-xl">{project.subtitle}</p>
+                </div>
+                <div className="flex justify-between items-center text-xs font-mono text-slate-400 border-t border-white/10 pt-3">
+                  <span>CATEGORY: {project.category}</span>
+                  <span className="text-neon-cyan">TIMELINE: {project.year}</span>
+                </div>
+              </div>
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
           </div>
 

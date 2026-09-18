@@ -179,7 +179,7 @@ export default function Profile3DCard() {
         </div>
 
         {/* STATUS INDICATOR BADGE */}
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-3.5 flex items-center justify-between">
           <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-semibold text-emerald-400 tracking-wide uppercase">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <span>{PROFILE_DATA.status}</span>
@@ -198,14 +198,14 @@ export default function Profile3DCard() {
         {/* PROFILE PORTRAIT IMAGE AREA (PARALLAX LAYER) */}
         <motion.div
           style={{ translateZ: reduceMotion ? 0 : imgZ }}
-          className="relative w-full aspect-[4/3] rounded-xl overflow-hidden mb-5 border border-white/15 shadow-inner bg-slate-900 group/img"
+          className="relative w-full aspect-[16/11] rounded-xl overflow-hidden mb-4 border border-white/15 shadow-inner bg-slate-900 group/img"
         >
           <img
             src={ProfileImg}
             alt={PROFILE_DATA.name}
             className="w-full h-full object-cover object-top transition-transform duration-700 group-hover/img:scale-105"
             onError={(e) => {
-              // Fallback to placeholder if avatar fail to load
+              // Fallback to placeholder if avatar fails to load
               e.currentTarget.src = '/placeholder.svg';
             }}
           />
@@ -213,21 +213,21 @@ export default function Profile3DCard() {
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80" />
 
           {/* Verification Badge overlay on Image */}
-          <div className="absolute bottom-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md border border-white/15 text-[11px] font-medium text-foreground">
-            <CheckCircle2 className="w-3.5 h-3.5 text-neon-blue" />
+          <div className="absolute bottom-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/15 text-[10px] font-medium text-foreground">
+            <CheckCircle2 className="w-3 h-3 text-neon-blue" />
             <span>Identity Verified</span>
           </div>
         </motion.div>
 
         {/* PROFILE INFORMATION (PARALLAX LAYER) */}
-        <motion.div style={{ translateZ: reduceMotion ? 0 : textZ }} className="space-y-3">
+        <motion.div style={{ translateZ: reduceMotion ? 0 : textZ }} className="space-y-2.5">
           {/* Name & Primary Role */}
           <div>
-            <h3 className="text-2xl font-black tracking-tight text-white flex items-center gap-2">
+            <h3 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
               <span>{PROFILE_DATA.name}</span>
               <Sparkles className="w-4 h-4 text-neon-purple animate-pulse" />
             </h3>
-            <p className="text-sm font-semibold bg-gradient-to-r from-neon-purple via-neon-cyan to-neon-blue bg-clip-text text-transparent mt-0.5">
+            <p className="text-xs sm:text-sm font-semibold bg-gradient-to-r from-neon-purple via-neon-cyan to-neon-blue bg-clip-text text-transparent mt-0.5">
               {PROFILE_DATA.role}
             </p>
           </div>
@@ -240,33 +240,23 @@ export default function Profile3DCard() {
                 <span className="font-semibold text-white">{PROFILE_DATA.course}</span>
                 <span className="text-slate-500"> • </span>
                 <span className="text-slate-400">{PROFILE_DATA.college}</span>
-                <div className="text-[11px] text-slate-500 mt-0.5 font-mono">
+                <div className="text-[11px] text-slate-400 mt-0.5 font-mono">
                   CGPA: {PROFILE_DATA.cgpa} · {PROFILE_DATA.educationPeriod}
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pt-0.5">
               <div className="flex items-center gap-2">
                 <MapPin className="w-3.5 h-3.5 text-neon-cyan shrink-0" />
                 <span className="text-slate-300">{PROFILE_DATA.location}</span>
               </div>
-              <span className="text-[11px] font-mono text-neon-blue bg-neon-blue/10 px-2 py-0.5 rounded border border-neon-blue/20">
+              <span className="text-[10px] font-mono text-neon-blue bg-neon-blue/10 px-2 py-0.5 rounded border border-neon-blue/20">
                 AI + Full-Stack
               </span>
             </div>
           </div>
         </motion.div>
-
-        {/* BOTTOM TECHNICAL METADATA FOOTER */}
-        <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-slate-400">
-          <span className="hover:text-neon-purple transition-colors">
-            {PROFILE_DATA.course} · CGPA {PROFILE_DATA.cgpa}
-          </span>
-          <span className="hover:text-neon-cyan transition-colors">
-            {PROFILE_DATA.location.toUpperCase()}
-          </span>
-        </div>
       </motion.div>
     </div>
   );

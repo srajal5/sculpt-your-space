@@ -68,15 +68,15 @@ const containerVariants: Variants = {
 
 const titleClassName = `
   relative z-[2] max-w-full
-  text-5xl sm:text-7xl lg:text-[7rem] xl:text-[8rem]
-  font-black tracking-[-0.055em] leading-[0.85]
+  text-4xl xs:text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[6.5rem] xl:text-[7.5rem]
+  font-black tracking-[-0.05em] leading-[0.9]
   select-none
 `;
 
 const rgbLayerClassName = `
   absolute inset-0 z-0
-  text-5xl sm:text-7xl lg:text-[7rem] xl:text-[8rem]
-  font-black tracking-[-0.055em] leading-[0.85]
+  text-4xl xs:text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[6.5rem] xl:text-[7.5rem]
+  font-black tracking-[-0.05em] leading-[0.9]
   pointer-events-none select-none
 `;
 

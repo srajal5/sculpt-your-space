@@ -195,7 +195,7 @@ export default function ContactSection() {
                   target="_blank"
                   rel="noopener noreferrer"
                   whileHover={{ x: 6, scale: 1.02 }}
-                  className="block p-5 rounded-2xl glassmorphism border-white/10 hover:border-neon-purple/40 transition-all duration-300 group"
+                  className="block p-5 rounded-2xl glassmorphism bg-slate-950/70 backdrop-blur-xl border-white/10 hover:border-neon-purple/40 transition-all duration-300 group shadow-lg"
                 >
                   <div className="flex items-center gap-4">
                     <div className="p-3 rounded-xl bg-white/5 border border-white/10 group-hover:bg-neon-purple/10 group-hover:border-neon-purple/30 transition-colors">
@@ -214,7 +214,7 @@ export default function ContactSection() {
               ))}
             </div>
 
-            <div className="p-6 rounded-2xl glassmorphism border-white/10 space-y-3">
+            <div className="p-6 rounded-2xl glassmorphism bg-slate-950/70 backdrop-blur-xl border-white/10 space-y-3 shadow-lg">
               <div className="flex items-center gap-3">
                 <MapPin className="w-5 h-5 text-neon-blue" />
                 <span className="text-sm font-bold text-foreground">Location & Timezone</span>
@@ -279,7 +279,7 @@ export default function ContactSection() {
             </AnimatePresence>
 
             {/* Transmission Form */}
-            <Card className="p-6 sm:p-8 glassmorphism border-white/15 relative overflow-hidden">
+            <Card className="p-6 sm:p-8 glassmorphism bg-slate-950/70 backdrop-blur-xl border-white/15 relative overflow-hidden shadow-xl">
               <AnimatePresence mode="wait">
                 {submittedSuccess ? (
                   <motion.div

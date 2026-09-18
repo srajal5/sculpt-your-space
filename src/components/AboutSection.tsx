@@ -89,7 +89,7 @@ export default function AboutSection() {
 
         {/* Education Card */}
         <Reveal direction="up" delay={0.1} className="mb-16">
-          <Card className="p-6 sm:p-8 glassmorphism border-white/10 max-w-3xl mx-auto">
+          <Card className="p-6 sm:p-8 glassmorphism bg-slate-950/70 backdrop-blur-xl border-white/10 max-w-3xl mx-auto shadow-xl">
             <div className="flex items-start gap-4">
               <div className="p-3 rounded-xl bg-neon-purple/10 border border-neon-purple/20">
                 <GraduationCap className="w-6 h-6 text-neon-purple" />
@@ -137,7 +137,7 @@ export default function AboutSection() {
                   <div className="relative group">
                     <div className="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-background border-2 border-neon-purple group-hover:bg-neon-purple group-hover:scale-125 transition-all duration-300" />
 
-                    <div className="p-6 rounded-xl glassmorphism border-white/5 group-hover:border-neon-purple/30 transition-all duration-300">
+                    <div className="p-6 rounded-xl glassmorphism bg-slate-950/70 backdrop-blur-xl border-white/10 group-hover:border-neon-purple/40 transition-all duration-300 shadow-lg">
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                         <span className="text-xs font-mono font-bold text-neon-blue uppercase px-2.5 py-0.5 rounded-full bg-neon-blue/10 border border-neon-blue/20">
                           {entry.type}
@@ -182,7 +182,7 @@ export default function AboutSection() {
                     }}
                     transition={{ duration: 0.3 }}
                   >
-                    <Card className="p-6 glassmorphism border-white/10 h-full flex flex-col justify-between hover:border-neon-purple/40 transition-colors duration-300">
+                    <Card className="p-6 glassmorphism bg-slate-950/70 backdrop-blur-xl border-white/10 h-full flex flex-col justify-between hover:border-neon-purple/40 transition-colors duration-300 shadow-lg">
                       <div>
                         <div className="flex items-center gap-3 mb-4">
                           <div className="p-2.5 rounded-xl bg-white/5 border border-white/10">

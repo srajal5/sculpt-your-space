@@ -11,41 +11,47 @@ interface TechItem {
 
 const LEAD_WORDS: { text: string; emphasis: boolean }[] = [
   { text: 'Building', emphasis: false },
-  { text: 'intelligent', emphasis: false },
   { text: 'AI-powered', emphasis: true },
   { text: 'applications', emphasis: false },
   { text: 'and', emphasis: false },
   { text: 'scalable', emphasis: true },
   { text: 'full-stack', emphasis: true },
   { text: 'systems', emphasis: false },
-  { text: 'with', emphasis: false },
+  { text: 'across', emphasis: false },
+  { text: 'Generative', emphasis: true },
+  { text: 'AI,', emphasis: true },
+  { text: 'computer', emphasis: false },
+  { text: 'vision,', emphasis: false },
+  { text: 'and', emphasis: false },
+  { text: 'backend', emphasis: true },
+  { text: 'engineering.', emphasis: false },
 ];
 
 const TECH_ITEMS: TechItem[] = [
   {
     label: 'Python',
-    className: 'text-neon-blue decoration-neon-blue/35',
-    glow: 'rgba(14,165,233,0.28)',
+    className: 'text-neon-blue decoration-neon-blue/40',
+    glow: 'rgba(14,165,233,0.35)',
   },
   {
     label: 'Generative AI',
-    className: 'text-neon-purple decoration-neon-purple/35',
-    glow: 'rgba(155,135,245,0.32)',
+    className: 'text-neon-purple decoration-neon-purple/40',
+    glow: 'rgba(155,135,245,0.4)',
   },
   {
     label: 'React',
-    className: 'text-cyan-400 decoration-cyan-400/35',
-    glow: 'rgba(34,211,238,0.28)',
+    className: 'text-cyan-400 decoration-cyan-400/40',
+    glow: 'rgba(34,211,238,0.35)',
   },
   {
     label: 'FastAPI',
-    className: 'text-emerald-400 decoration-emerald-400/35',
-    glow: 'rgba(52,211,153,0.28)',
+    className: 'text-emerald-400 decoration-emerald-400/40',
+    glow: 'rgba(52,211,153,0.35)',
   },
   {
     label: 'Computer Vision',
-    className: 'text-neon-pink decoration-neon-pink/35',
-    glow: 'rgba(217,70,239,0.28)',
+    className: 'text-neon-pink decoration-neon-pink/40',
+    glow: 'rgba(217,70,239,0.35)',
   },
 ];
 
