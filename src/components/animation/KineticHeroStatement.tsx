@@ -30,28 +30,28 @@ const LEAD_WORDS: { text: string; emphasis: boolean }[] = [
 const TECH_ITEMS: TechItem[] = [
   {
     label: 'Python',
-    className: 'text-neon-blue decoration-neon-blue/40',
-    glow: 'rgba(14,165,233,0.35)',
+    className: 'text-cyan-400 decoration-cyan-400/30',
+    glow: 'rgba(34,211,238,0.3)',
   },
   {
     label: 'Generative AI',
-    className: 'text-neon-purple decoration-neon-purple/40',
-    glow: 'rgba(155,135,245,0.4)',
+    className: 'text-neon-purple decoration-neon-purple/30',
+    glow: 'rgba(155,135,245,0.35)',
   },
   {
     label: 'React',
-    className: 'text-cyan-400 decoration-cyan-400/40',
-    glow: 'rgba(34,211,238,0.35)',
+    className: 'text-cyan-400 decoration-cyan-400/30',
+    glow: 'rgba(34,211,238,0.3)',
   },
   {
     label: 'FastAPI',
-    className: 'text-emerald-400 decoration-emerald-400/40',
-    glow: 'rgba(52,211,153,0.35)',
+    className: 'text-emerald-400 decoration-emerald-400/30',
+    glow: 'rgba(52,211,153,0.3)',
   },
   {
     label: 'Computer Vision',
-    className: 'text-neon-pink decoration-neon-pink/40',
-    glow: 'rgba(217,70,239,0.35)',
+    className: 'text-neon-pink decoration-neon-pink/30',
+    glow: 'rgba(217,70,239,0.3)',
   },
 ];
 
@@ -110,9 +110,9 @@ export default function KineticHeroStatement() {
   const wordVariants = reduceMotion ? wordVariantsReduced : wordVariantsNormal;
 
   return (
-    <div className="mb-5 max-w-4xl">
+    <div className="mb-4 sm:mb-5 max-w-[720px]">
       <motion.h2
-        className="text-xl sm:text-2xl lg:text-[1.7rem] font-light text-foreground/88 leading-snug"
+        className="text-lg sm:text-xl lg:text-[1.45rem] font-sans font-normal text-foreground/90 leading-snug"
         variants={sentenceVariants}
         initial={reduceMotion ? false : 'hidden'}
         animate="visible"
@@ -121,10 +121,10 @@ export default function KineticHeroStatement() {
           <motion.span
             key={word.text}
             variants={wordVariants}
-            className={`inline-block mr-[0.32em] ${
+            className={`inline-block mr-[0.28em] ${
               word.emphasis
                 ? 'font-medium text-foreground tracking-tight'
-                : ''
+                : 'text-foreground/80 font-normal'
             }`}
           >
             {word.text}
@@ -133,16 +133,16 @@ export default function KineticHeroStatement() {
       </motion.h2>
 
       <motion.p
-        className="hero-tech-stack mt-3 text-xl sm:text-2xl lg:text-[1.7rem] font-light leading-relaxed"
+        className="hero-tech-stack mt-2.5 sm:mt-3 text-base sm:text-lg lg:text-[1.35rem] font-sans font-semibold leading-normal flex flex-wrap items-center"
         variants={techVariants}
         initial={reduceMotion ? false : 'hidden'}
         animate="visible"
       >
         {TECH_ITEMS.map((tech, index) => (
-          <span key={tech.label} className="inline-block">
+          <span key={tech.label} className="inline-flex items-center">
             <TechWord tech={tech} reduceMotion={reduceMotion} wordVariants={wordVariants} />
             {index < TECH_ITEMS.length - 1 && (
-              <span className="hero-tech-plus mx-1.5 sm:mx-2 text-white/25 font-light">
+              <span className="hero-tech-plus mx-2 text-white/35 font-normal select-none">
                 +
               </span>
             )}
@@ -174,7 +174,7 @@ function TechWord({
           : undefined
       }
       transition={{ type: 'spring', stiffness: 340, damping: 18 }}
-      className={`hero-tech-word relative inline-block cursor-default font-semibold underline decoration-2 underline-offset-[6px] ${tech.className}`}
+      className={`hero-tech-word relative inline-block cursor-default font-sans font-semibold underline decoration-1 underline-offset-[5px] hover:decoration-2 transition-all ${tech.className}`}
       style={{ '--tech-glow': tech.glow } as CSSProperties}
       onMouseEnter={() => setCursorState('hover')}
       onMouseLeave={() => setCursorState('default')}

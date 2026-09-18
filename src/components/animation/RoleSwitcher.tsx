@@ -87,13 +87,13 @@ export default function RoleSwitcher({
 
   return (
     <div
-      className={`flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3.5 mb-6 select-none ${className}`}
+      className={`flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3.5 mb-7 sm:mb-8 select-none ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Technical HUD Prefix */}
       <div className="flex items-center gap-2 shrink-0">
-        <span className="text-xs font-mono font-semibold tracking-widest text-neon-blue/90 uppercase flex items-center gap-1.5">
+        <span className="text-[11px] sm:text-xs font-mono font-medium tracking-[0.16em] text-neon-blue uppercase flex items-center gap-1.5">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-cyan opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-neon-cyan shadow-[0_0_8px_#06b6d4]" />
@@ -102,7 +102,7 @@ export default function RoleSwitcher({
         </span>
 
         {/* Dynamic 2-digit index counter */}
-        <div className="relative inline-flex items-center justify-center font-mono text-xs font-bold text-neon-cyan/95 bg-neon-blue/10 px-1.5 py-0.5 rounded border border-neon-cyan/30 shadow-[0_0_10px_rgba(6,182,212,0.2)] min-w-[2.2rem] h-5 overflow-hidden">
+        <div className="relative inline-flex items-center justify-center font-mono text-[11px] font-semibold text-neon-cyan/95 bg-neon-blue/10 px-1.5 py-0.5 rounded border border-neon-cyan/30 shadow-[0_0_8px_rgba(6,182,212,0.2)] min-w-[2rem] h-5 overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.span
               key={roleIndexFormatted}
@@ -123,7 +123,7 @@ export default function RoleSwitcher({
       </div>
 
       {/* Role viewport container: expansive min-width prevents any layout shift or clipping */}
-      <div className="relative inline-flex flex-col justify-center min-w-[280px] sm:min-w-[360px] md:min-w-[460px] h-11 sm:h-12 py-0.5">
+      <div className="relative inline-flex flex-col justify-center min-w-[260px] sm:min-w-[340px] md:min-w-[420px] h-10 sm:h-11 py-0.5">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentRole}
@@ -145,14 +145,14 @@ export default function RoleSwitcher({
             {/* Main Gradient Typography with Adaptive Glow */}
             <div className="relative inline-flex items-center">
               <span
-                className={`
-                  text-lg sm:text-xl md:text-2xl
-                  font-mono font-semibold tracking-wide
-                  bg-gradient-to-r from-white via-purple-100 to-neon-cyan
-                  bg-clip-text
+                className="
+                  text-lg sm:text-xl md:text-[1.35rem]
+                  font-sans font-semibold tracking-tight
+                  bg-gradient-to-r from-[#ffffff] via-[#ddd5ff] via-[35%] via-[#9d8cff] via-[65%] to-[#58d9ff]
+                  bg-clip-text text-transparent
                   whitespace-nowrap transition-all duration-300
-                  
-                `}
+                  drop-shadow-[0_0_10px_rgba(157,140,255,0.25)]
+                "
               >
                 {currentRole}
               </span>
@@ -164,7 +164,7 @@ export default function RoleSwitcher({
                   initial={{ x: '-110%', opacity: 0 }}
                   animate={{
                     x: '220%',
-                    opacity: [0, 0.9, 0.9, 0],
+                    opacity: [0, 0.85, 0.85, 0],
                   }}
                   transition={{
                     duration: 0.62,
@@ -176,25 +176,25 @@ export default function RoleSwitcher({
               )}
             </div>
 
-            {/* Active Technical Underline with Draw & Glow Effect */}
-            <div className="relative w-full h-[2px] mt-1 overflow-hidden bg-white/5 rounded-full">
+            {/* Active 1px Subtle Horizontal Energy Line (transparent -> cyan -> violet -> transparent) */}
+            <div className="relative w-full h-[1px] mt-1 overflow-hidden bg-white/5 rounded-full">
               {!reduceMotion ? (
                 <motion.div
                   key={`underline-${currentRole}`}
-                  initial={{ width: '0%', opacity: 0.5 }}
+                  initial={{ width: '0%', opacity: 0.4 }}
                   animate={{
-                    width: ['0%', '100%', '76%'],
-                    opacity: isHovered ? 1 : 0.85,
+                    width: ['0%', '100%', '80%'],
+                    opacity: isHovered ? 1 : [0.4, 0.95, 0.75],
                   }}
                   transition={{
-                    duration: 0.48,
-                    times: [0, 0.65, 1],
+                    duration: 0.45,
+                    times: [0, 0.6, 1],
                     ease: [0.16, 1, 0.3, 1],
                   }}
-                  className="h-full bg-gradient-to-r from-neon-cyan via-purple-400 to-transparent shadow-[0_0_8px_rgba(6,182,212,0.8)] rounded-full"
+                  className="h-full bg-gradient-to-r from-transparent via-neon-cyan via-50% to-neon-purple to-transparent shadow-[0_0_6px_rgba(6,182,212,0.6)]"
                 />
               ) : (
-                <div className="h-full w-[76%] bg-gradient-to-r from-neon-cyan via-purple-400 to-transparent" />
+                <div className="h-full w-[80%] bg-gradient-to-r from-transparent via-neon-cyan to-neon-purple to-transparent opacity-75" />
               )}
             </div>
           </motion.div>

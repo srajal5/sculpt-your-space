@@ -68,15 +68,15 @@ const containerVariants: Variants = {
 
 const titleClassName = `
   relative z-[2] max-w-full
-  text-4xl xs:text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[6.5rem] xl:text-[7.5rem]
-  font-black tracking-[-0.05em] leading-[0.9]
+  text-[clamp(2.75rem,11vw,4.2rem)] sm:text-[clamp(3.75rem,6.5vw,7rem)]
+  font-sans font-black tracking-[-0.055em] leading-[0.92]
   select-none
 `;
 
 const rgbLayerClassName = `
   absolute inset-0 z-0
-  text-4xl xs:text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[6.5rem] xl:text-[7.5rem]
-  font-black tracking-[-0.05em] leading-[0.9]
+  text-[clamp(2.75rem,11vw,4.2rem)] sm:text-[clamp(3.75rem,6.5vw,7rem)]
+  font-sans font-black tracking-[-0.055em] leading-[0.92]
   pointer-events-none select-none
 `;
 
@@ -462,7 +462,7 @@ export default function CursorReactiveText({
   return (
     <div
       ref={wrapperRef}
-      className={`cursor-reactive-title relative mb-7 max-w-full group cursor-default ${className}`}
+      className={`cursor-reactive-title relative mb-4 sm:mb-5 max-w-full group cursor-default ${className}`}
       onPointerEnter={handlePointerEnter}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
@@ -470,14 +470,14 @@ export default function CursorReactiveText({
       {/* Dynamic Background Aura Glow */}
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute -inset-x-12 -inset-y-10 -z-20 rounded-full blur-3xl"
+        className="pointer-events-none absolute -inset-x-8 -inset-y-6 -z-20 rounded-full blur-2xl opacity-60"
         style={{
           opacity: auraOpacity,
           scale: auraScale,
           x: auraX,
           y: auraY,
           background:
-            'radial-gradient(ellipse at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(139,92,246,0.35), rgba(34,211,238,0.20), rgba(217,70,239,0.15), transparent 70%)',
+            'radial-gradient(ellipse at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(185,166,255,0.18), rgba(85,216,255,0.12), transparent 70%)',
         }}
       />
 
@@ -562,7 +562,7 @@ export default function CursorReactiveText({
                   ref={(node) => {
                     letterInnerRefs.current[index] = node;
                   }}
-                  className="letter-fill inline-block will-change-transform bg-gradient-to-r from-white via-violet-200 to-cyan-300 bg-clip-text text-transparent drop-shadow-[0_0_18px_rgba(139,92,246,0.35)]"
+                  className="letter-fill inline-block will-change-transform bg-gradient-to-r from-[#ffffff] via-[#e9ddff] via-[40%] via-[#b9a6ff] via-[75%] to-[#55d8ff] bg-clip-text text-transparent drop-shadow-[0_0_12px_rgba(185,166,255,0.22)]"
                 >
                   {char === ' ' ? '\u00A0' : char}
                 </span>

@@ -81,13 +81,13 @@ export default function Navbar() {
 
       {/* Main Navigation Bar Header */}
       <header
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-40 h-16 sm:h-[72px] flex items-center transition-all duration-300 ${
           scrolled
-            ? 'py-3.5 bg-background/80 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)]'
-            : 'py-6 bg-transparent'
+            ? 'bg-background/85 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)]'
+            : 'bg-background/40 backdrop-blur-md border-b border-white/5'
         }`}
       >
-        <div className="w-full max-w-[1440px] mx-auto px-5 sm:px-6 lg:px-8 flex items-center justify-between">
+        <div className="w-full max-w-[1440px] xl:max-w-[1480px] mx-auto px-6 lg:px-8 xl:px-10 flex items-center justify-between h-full">
           {/* Left Zone: Logo Branding */}
           <div className="flex items-center">
             <a
@@ -110,8 +110,8 @@ export default function Navbar() {
                   <a
                     href={link.href}
                     onClick={() => setActiveSection(link.id)}
-                    className={`relative px-4 py-1.5 rounded-full text-xs font-mono font-bold tracking-wider transition-colors duration-300 ${
-                      isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
+                    className={`relative px-4 py-1.5 rounded-full text-xs font-sans font-medium tracking-wider transition-colors duration-300 ${
+                      isActive ? 'text-foreground font-semibold' : 'text-muted-foreground hover:text-foreground'
                     }`}
                     onMouseEnter={() => setCursorState('hover')}
                     onMouseLeave={() => setCursorState('default')}
@@ -235,7 +235,7 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="fixed inset-x-0 top-[60px] z-30 md:hidden glassmorphism bg-background/95 border-b border-white/10 p-6 space-y-4 shadow-2xl backdrop-blur-2xl"
+            className="fixed inset-x-0 top-16 sm:top-[72px] z-30 lg:hidden glassmorphism bg-background/95 border-b border-white/10 p-6 space-y-4 shadow-2xl backdrop-blur-2xl"
           >
             <nav className="flex flex-col space-y-3">
               {navLinks.map((link) => (

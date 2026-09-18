@@ -20,6 +20,11 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: ['"Geist Sans"', 'system-ui', 'sans-serif'],
+				mono: ['"Geist Mono"', 'monospace'],
+				pixel: ['"Geist Pixel"', 'monospace'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',

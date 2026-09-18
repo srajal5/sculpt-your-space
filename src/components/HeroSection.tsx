@@ -116,12 +116,16 @@ export default function HeroSection() {
       className="
         section
         relative
-        pt-28
-        pb-16
-        min-h-screen
+        pt-24
+        sm:pt-28
+        lg:pt-[104px]
+        pb-14
+        min-h-[calc(100vh-4rem)]
+        lg:min-h-[calc(100vh-72px)]
         flex
-        items-center
-        justify-center
+        flex-col
+        justify-start
+        lg:justify-center
         overflow-hidden
       "
     >
@@ -207,7 +211,7 @@ export default function HeroSection() {
       {/* =========================================
           MAIN HERO CONTAINER
       ========================================== */}
-      <div className="w-full max-w-[1440px] mx-auto px-5 sm:px-6 lg:px-8 xl:px-10 z-10 relative">
+      <div className="w-full max-w-[1440px] xl:max-w-[1480px] mx-auto px-6 lg:px-8 xl:px-10 z-10 relative">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -216,7 +220,7 @@ export default function HeroSection() {
             grid
             grid-cols-1
             lg:grid-cols-12
-            gap-12
+            gap-10
             lg:gap-8
             items-center
           "
@@ -236,7 +240,7 @@ export default function HeroSection() {
             <CursorReactiveText text={PROFILE_DATA.name} />
 
             {/* Rotating Professional Role Switcher */}
-            <motion.div variants={leftItemVariants} className="mb-2">
+            <motion.div variants={leftItemVariants} className="mb-1">
               <RoleSwitcher />
             </motion.div>
 
@@ -248,14 +252,15 @@ export default function HeroSection() {
             ====================================== */}
             <motion.div
               variants={leftItemVariants}
-              className="relative max-w-2xl mb-8"
+              className="relative max-w-[720px] mb-7 sm:mb-8"
             >
               <p
                 className="
                   text-base
                   sm:text-lg
-                  text-foreground/85
+                  text-foreground/80
                   leading-relaxed
+                  font-sans
                   font-normal
                   transition-colors
                   duration-300
@@ -279,7 +284,8 @@ export default function HeroSection() {
                 flex-wrap
                 gap-4
                 items-center
-                mb-10
+                mb-6
+                sm:mb-7
               "
             >
               {/* Primary CTA */}
@@ -491,17 +497,17 @@ export default function HeroSection() {
                   whileHover={
                     !reduceMotion
                       ? {
-                          scale: 1.15,
-                          y: -3,
-                          backgroundColor: 'rgba(155, 135, 245, 0.2)',
-                          borderColor: 'rgba(155, 135, 245, 0.4)',
-                          boxShadow: '0 0 20px rgba(155, 135, 245, 0.25)',
-                        }
+                        scale: 1.15,
+                        y: -3,
+                        backgroundColor: 'rgba(155, 135, 245, 0.2)',
+                        borderColor: 'rgba(155, 135, 245, 0.4)',
+                        boxShadow: '0 0 20px rgba(155, 135, 245, 0.25)',
+                      }
                       : {
-                          backgroundColor: 'rgba(155, 135, 245, 0.25)',
-                          borderColor: 'rgba(155, 135, 245, 0.5)',
-                          boxShadow: '0 0 20px rgba(155, 135, 245, 0.35)',
-                        }
+                        backgroundColor: 'rgba(155, 135, 245, 0.25)',
+                        borderColor: 'rgba(155, 135, 245, 0.5)',
+                        boxShadow: '0 0 20px rgba(155, 135, 245, 0.35)',
+                      }
                   }
                   transition={{
                     type: 'spring',
@@ -553,7 +559,10 @@ export default function HeroSection() {
               flex
               justify-center
               items-center
+              self-center
               w-full
+              mt-4
+              lg:mt-0
             "
           >
             <Profile3DCard />
@@ -577,24 +586,24 @@ export default function HeroSection() {
           animate={
             !reduceMotion
               ? {
-                  opacity: 1,
-                  y: [0, 8, 0],
-                }
+                opacity: 1,
+                y: [0, 8, 0],
+              }
               : {
-                  opacity: 1,
-                }
+                opacity: 1,
+              }
           }
           transition={
             !reduceMotion
               ? {
-                  delay: 1.6,
-                  repeat: Infinity,
-                  duration: 2.2,
-                }
+                delay: 1.6,
+                repeat: Infinity,
+                duration: 2.2,
+              }
               : {
-                  delay: 0.8,
-                  duration: 0.6,
-                }
+                delay: 0.8,
+                duration: 0.6,
+              }
           }
           whileHover={!reduceMotion ? { scale: 1.08 } : undefined}
           className="
